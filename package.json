@@ -1,0 +1,10 @@
+{
+  "name": "jira-ticket-manager",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "pnpm --filter extension dev",
+    "build": "pnpm --filter extension build"
+  }
+}

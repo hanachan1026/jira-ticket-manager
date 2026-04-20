@@ -1,0 +1,5 @@
+node_modules/
+packages/extension/.output/
+packages/extension/.wxt/
+*.zip
+.DS_Store

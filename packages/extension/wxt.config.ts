@@ -9,8 +9,8 @@ export default defineConfig({
     description:
       "Save Jira ticket info and copy it instantly — branch names, commit prefixes, daily reports.",
     version: "0.1.0",
-    permissions: ["storage", "clipboardWrite", "alarms"],
-    host_permissions: ["*://*.atlassian.net/*"],
+    permissions: ["storage", "clipboardWrite", "scripting"],
+    host_permissions: ["*://*.atlassian.net/*", "*://*/*"],
     action: {
       default_popup: "popup.html",
       default_icon: {

@@ -4,9 +4,24 @@ import { defineContentScript } from "wxt/utils/define-content-script";
 import { createShadowRootUi } from "wxt/utils/content-script-ui/shadow-root";
 import { SaveBadge } from "../components/SaveBadge";
 import { detectTicketNumber, detectTicketTitle } from "../utils/jiraDetector";
+import type { ExtensionMessage } from "../types";
+
+/**
+ * ページ訪問を「最近開いた」リストに記録（fire-and-forget）
+ */
+function trackPageView(number: string, title: string, url: string): void {
+  const msg: ExtensionMessage = {
+    type: "TRACK_TICKET_VIEW",
+    payload: { number, title, url },
+  };
+  chrome.runtime.sendMessage(msg).catch(() => {
+    // background が準備できていない場合は無視
+  });
+}
 
 export default defineContentScript({
   matches: ["*://*.atlassian.net/browse/*"],
+  registration: "runtime", // background.ts で動的に登録
   cssInjectionMode: "ui",
 
   async main(ctx) {
@@ -18,6 +33,9 @@ export default defineContentScript({
       let attempts = 0;
       const tryMount = async (): Promise<void> => {
         const title = detectTicketTitle() ?? number;
+
+        // 最近開いたリストに自動追加
+        trackPageView(number, title, window.location.href);
 
         const ui = await createShadowRootUi(ctx, {
           name: "jtm-save-badge",

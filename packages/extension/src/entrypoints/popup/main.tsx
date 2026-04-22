@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { StorageProvider } from "../../storage/StorageContext";
 import { App } from "./App";
 import "../../assets/tailwind.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <StorageProvider>
+      <App />
+    </StorageProvider>
   </React.StrictMode>
 );

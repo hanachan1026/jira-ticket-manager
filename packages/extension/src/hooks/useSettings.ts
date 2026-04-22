@@ -1,8 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
 import { settingsStorage } from "../storage";
+import { useStorage } from "../storage/StorageContext";
 import type { UserSettings } from "../types";
 
 export function useSettings() {
+  const {
+    mode,
+    enableFileStorage,
+    disableFileStorage,
+    migrateToFile,
+    requestFilePermission,
+    isFileStorageAvailable,
+    needsPermission,
+  } = useStorage();
+
   const [settings, setSettings] = useState<UserSettings>({
     storageArea: "sync",
     defaultPrefix: "feat",
@@ -18,9 +29,21 @@ export function useSettings() {
   }, []);
 
   const updateSettings = useCallback(async (data: Partial<UserSettings>) => {
-    const next = { ...settings, ...data };
+    const current = await settingsStorage.getValue();
+    const next = { ...current, ...data };
     await settingsStorage.setValue(next);
-  }, [settings]);
+  }, []);
 
-  return { settings, updateSettings };
+  return {
+    settings,
+    updateSettings,
+    // ファイルストレージ関連
+    storageMode: mode,
+    enableFileStorage,
+    disableFileStorage,
+    migrateToFile,
+    requestFilePermission,
+    isFileStorageAvailable,
+    needsPermission,
+  };
 }

@@ -1,48 +1,52 @@
 import { useState, useEffect, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { ticketsStorage } from "../storage";
+import { useStorage } from "../storage/StorageContext";
 import type { JiraTicket } from "../types";
 
 export function useTickets() {
+  const { tickets: ticketsAdapter } = useStorage();
   const [tickets, setTickets] = useState<JiraTicket[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    ticketsStorage.getValue().then((v) => {
+    ticketsAdapter.getValue().then((v) => {
       setTickets(v);
       setLoading(false);
     });
 
-    const unwatch = ticketsStorage.watch((v) => setTickets(v ?? []));
+    const unwatch = ticketsAdapter.watch((v) => setTickets(v ?? []));
     return unwatch;
-  }, []);
+  }, [ticketsAdapter]);
 
   const addTicket = useCallback(
     async (data: Omit<JiraTicket, "id" | "createdAt" | "updatedAt">): Promise<JiraTicket> => {
       const now = Date.now();
       const ticket: JiraTicket = { ...data, id: uuidv4(), createdAt: now, updatedAt: now };
-      const updated = [ticket, ...tickets];
-      await ticketsStorage.setValue(updated);
+      const current = await ticketsAdapter.getValue();
+      const updated = [ticket, ...current];
+      await ticketsAdapter.setValue(updated);
       return ticket;
     },
-    [tickets]
+    [ticketsAdapter]
   );
 
   const updateTicket = useCallback(
     async (id: string, data: Partial<Omit<JiraTicket, "id" | "createdAt">>) => {
-      const updated = tickets.map((t) =>
+      const current = await ticketsAdapter.getValue();
+      const updated = current.map((t) =>
         t.id === id ? { ...t, ...data, updatedAt: Date.now() } : t
       );
-      await ticketsStorage.setValue(updated);
+      await ticketsAdapter.setValue(updated);
     },
-    [tickets]
+    [ticketsAdapter]
   );
 
   const deleteTicket = useCallback(
     async (id: string) => {
-      await ticketsStorage.setValue(tickets.filter((t) => t.id !== id));
+      const current = await ticketsAdapter.getValue();
+      await ticketsAdapter.setValue(current.filter((t) => t.id !== id));
     },
-    [tickets]
+    [ticketsAdapter]
   );
 
   return { tickets, loading, addTicket, updateTicket, deleteTicket };

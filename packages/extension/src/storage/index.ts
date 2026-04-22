@@ -1,4 +1,5 @@
 export { ticketsStorage } from "./tickets";
 export { templatesStorage, DEFAULT_TEMPLATES } from "./templates";
 export { settingsStorage } from "./settings";
-export { dailyStatusStorage } from "./dailyStatus";
+export { wipStatusStorage } from "./wipStatus";
+export { recentlyViewedStorage, RECENTLY_VIEWED_LIMIT } from "./recentlyViewed";

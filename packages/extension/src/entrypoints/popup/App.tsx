@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { TicketCard } from "../../components/TicketCard";
@@ -9,18 +9,69 @@ import { Toast } from "../../components/ui/Toast";
 import { useTickets } from "../../hooks/useTickets";
 import { useTemplates } from "../../hooks/useTemplates";
 import { useSettings } from "../../hooks/useSettings";
-import { useDailyStatus } from "../../hooks/useDailyStatus";
+import { useWipStatus } from "../../hooks/useWipStatus";
 import { useClipboard } from "../../hooks/useClipboard";
-import type { JiraTicket } from "../../types";
+import { useStorage } from "../../storage/StorageContext";
+import type { JiraTicket, ExtensionMessage } from "../../types";
 
 type View = "list" | "add" | "edit" | "daily" | "settings";
 
 export function App() {
+  const { isReady, mode, tickets: ticketsAdapter } = useStorage();
   const { tickets, loading, addTicket, updateTicket, deleteTicket } = useTickets();
   const { templates, addTemplate, removeTemplate } = useTemplates();
-  const { settings, updateSettings } = useSettings();
-  const { dailyStatus, toggleInProgress, isInProgress } = useDailyStatus();
+  const {
+    settings,
+    updateSettings,
+    storageMode,
+    enableFileStorage,
+    disableFileStorage,
+    migrateToFile,
+    requestFilePermission,
+    isFileStorageAvailable,
+    needsPermission,
+  } = useSettings();
+  const { wipStatus, toggleInProgress, isInProgress } = useWipStatus();
   const { copy, copiedId } = useClipboard();
+
+  // ファイルモード時のキュー処理
+  useEffect(() => {
+    if (mode !== "file") return;
+
+    const processPendingQueue = async () => {
+      const result = await chrome.storage.local.get("pendingFileSaves");
+      const pendingFileSaves: JiraTicket[] = (result.pendingFileSaves as JiraTicket[]) ?? [];
+      if (pendingFileSaves.length === 0) return;
+
+      // 現在のチケットを取得してマージ
+      const currentTickets = await ticketsAdapter.getValue();
+      const newTickets = pendingFileSaves.filter(
+        (t) => !currentTickets.some((ct) => ct.number === t.number)
+      );
+
+      if (newTickets.length > 0) {
+        await ticketsAdapter.setValue([...newTickets, ...currentTickets]);
+      }
+
+      // キューをクリア
+      await chrome.storage.local.remove("pendingFileSaves");
+
+      // キャッシュを更新（background.ts の GET_TICKETS 用）
+      const updatedTickets = await ticketsAdapter.getValue();
+      await chrome.storage.local.set({ cachedTickets: updatedTickets });
+    };
+
+    processPendingQueue();
+
+    // キュー処理リクエストをリッスン
+    const listener = (msg: ExtensionMessage) => {
+      if (msg.type === "PROCESS_FILE_QUEUE") {
+        processPendingQueue();
+      }
+    };
+    chrome.runtime.onMessage.addListener(listener);
+    return () => chrome.runtime.onMessage.removeListener(listener);
+  }, [mode, ticketsAdapter]);
 
   const [view, setView] = useState<View>("list");
   const [editingTicket, setEditingTicket] = useState<JiraTicket | null>(null);
@@ -41,6 +92,15 @@ export function App() {
     }
     return result;
   }, [tickets, search, todayOnly, isInProgress]);
+
+  // ストレージ初期化待ち
+  if (!isReady) {
+    return (
+      <div className="flex items-center justify-center h-full bg-white">
+        <div className="text-xs text-gray-400">読み込み中...</div>
+      </div>
+    );
+  }
 
   const handleCopy = async (text: string, id: string) => {
     await copy(text, id);
@@ -102,7 +162,7 @@ export function App() {
             }`}
           >
             <StarIcon size={11} fill={todayOnly ? "currentColor" : "none"} />
-            本日作業中のみ
+            作業中
           </button>
         </div>
 
@@ -195,7 +255,7 @@ export function App() {
       <div className="p-3 h-full bg-white overflow-y-auto">
         <DailyReportPanel
           tickets={tickets}
-          preSelectedIds={dailyStatus.inProgressIds}
+          preSelectedIds={wipStatus.inProgressIds}
           templates={templates}
           settings={settings}
           onClose={() => setView("list")}
@@ -215,6 +275,13 @@ export function App() {
           onAddTemplate={addTemplate}
           onRemoveTemplate={removeTemplate}
           onClose={() => setView("list")}
+          storageMode={storageMode}
+          enableFileStorage={enableFileStorage}
+          disableFileStorage={disableFileStorage}
+          migrateToFile={migrateToFile}
+          requestFilePermission={requestFilePermission}
+          isFileStorageAvailable={isFileStorageAvailable}
+          needsPermission={needsPermission}
         />
       </div>
     );

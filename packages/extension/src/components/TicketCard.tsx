@@ -90,7 +90,7 @@ export function TicketCard({
             variant="ghost"
             size="icon"
             onClick={onToggleInProgress}
-            title={isInProgress ? "本日作業中を解除" : "本日作業中にセット"}
+            title={isInProgress ? "WIPを解除" : "WIPにセット"}
             className={isInProgress ? "text-yellow-500 hover:text-yellow-600" : ""}
           >
             <StarIcon size={13} fill={isInProgress ? "currentColor" : "none"} />

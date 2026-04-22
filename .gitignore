@@ -3,3 +3,6 @@ packages/extension/.output/
 packages/extension/.wxt/
 *.zip
 .DS_Store
+
+# User data files
+jira-tickets.json

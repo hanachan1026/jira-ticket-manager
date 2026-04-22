@@ -8,7 +8,8 @@ const DEFAULT_JIRA_PATTERN = "*://*.atlassian.net/browse/*";
 
 /**
  * jiraBaseUrl から match pattern を生成
- * 例: "https://myjira.example.com" → "*://myjira.example.com/browse/*"
+ * 例: "https://myjira.example.com" → "*://myjira.example.com/*"
+ * 例: "https://myjira.example.com/jira" → "*://myjira.example.com/jira/*"
  */
 function buildMatchPattern(jiraBaseUrl: string | undefined): string[] {
   if (!jiraBaseUrl) {
@@ -17,8 +18,9 @@ function buildMatchPattern(jiraBaseUrl: string | undefined): string[] {
 
   try {
     const url = new URL(jiraBaseUrl);
-    // プロトコルを * に、パスに /browse/* を追加
-    const pattern = `*://${url.host}/browse/*`;
+    // プロトコルを * に、パス以下すべてにマッチ
+    const basePath = url.pathname.replace(/\/+$/, ""); // 末尾スラッシュ除去
+    const pattern = `*://${url.host}${basePath}/*`;
     return [pattern];
   } catch {
     // 無効な URL の場合はデフォルトにフォールバック
@@ -45,7 +47,6 @@ async function registerContentScript(jiraBaseUrl: string | undefined): Promise<v
       id: CONTENT_SCRIPT_ID,
       matches,
       js: ["content-scripts/jira.js"],
-      css: ["content-scripts/jira.css"],
       runAt: "document_idle",
     },
   ]);

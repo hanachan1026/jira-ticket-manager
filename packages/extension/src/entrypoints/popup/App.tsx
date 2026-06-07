@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon } from "lucide-react";
+import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon, ClockIcon } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { TicketCard } from "../../components/TicketCard";
 import { TicketForm } from "../../components/TicketForm";
 import { DailyReportPanel } from "../../components/DailyReportPanel";
 import { SettingsPanel } from "../../components/SettingsPanel";
+import { RecentlyViewedPanel } from "../../components/RecentlyViewedPanel";
 import { Toast } from "../../components/ui/Toast";
 import { useTickets } from "../../hooks/useTickets";
 import { useTemplates } from "../../hooks/useTemplates";
@@ -14,7 +15,7 @@ import { useClipboard } from "../../hooks/useClipboard";
 import { useStorage } from "../../storage/StorageContext";
 import type { JiraTicket, ExtensionMessage } from "../../types";
 
-type View = "list" | "add" | "edit" | "daily" | "settings";
+type View = "list" | "add" | "edit" | "daily" | "settings" | "recent";
 
 export function App() {
   const { isReady, mode, tickets: ticketsAdapter } = useStorage();
@@ -208,6 +209,10 @@ export function App() {
         <div className="px-3 py-2 border-t border-gray-100 flex items-center justify-between">
           <span className="text-xs text-gray-400">{tickets.length} チケット</span>
           <div className="flex gap-1">
+            <Button variant="ghost" size="sm" onClick={() => setView("recent")} title="最近見たチケット">
+              <ClockIcon size={14} className="mr-1" />
+              履歴
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => setView("daily")} title="日報コピー">
               <ClipboardListIcon size={14} className="mr-1" />
               日報
@@ -260,6 +265,20 @@ export function App() {
           settings={settings}
           onClose={() => setView("list")}
         />
+      </div>
+    );
+  }
+
+  // ── Recently Viewed view ───────────────────────────────────────────────────
+  if (view === "recent") {
+    return (
+      <div className="flex flex-col h-full">
+        <RecentlyViewedPanel
+          onClose={() => setView("list")}
+          onCopy={handleCopy}
+          copiedId={copiedId}
+        />
+        <Toast message={toastMsg} show={showToast} />
       </div>
     );
   }

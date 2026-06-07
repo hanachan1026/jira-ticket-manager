@@ -142,3 +142,43 @@ test.describe("content script – auto tracking", () => {
     await expect(popup.getByText("QPARAM-1", { exact: true })).toBeVisible();
   });
 });
+
+test.describe("content script – /issues/ URL パターン", () => {
+  const ISSUES_BASE = "https://test.atlassian.net/issues";
+
+  test.beforeEach(async ({ context }) => {
+    await context.route(`${ISSUES_BASE}/**`, (route) => {
+      const url = new URL(route.request().url());
+      const ticketId = url.pathname.split("/").pop() ?? "UNKNOWN";
+      route.fulfill({
+        status: 200,
+        contentType: "text/html",
+        body: [
+          "<!DOCTYPE html><html><head>",
+          `<title>${ticketId} - Jira</title>`,
+          "</head><body>",
+          `<h1 data-testid="issue-title">${ticketId} summary</h1>`,
+          "</body></html>",
+        ].join(""),
+      });
+    });
+
+    await new Promise((r) => setTimeout(r, 1000));
+  });
+
+  test("/issues/ パスのチケット URL でも記録される", async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await context.newPage();
+    await page.goto(`${ISSUES_BASE}/ISS-42`);
+    await page.waitForSelector("jtm-save-badge", { timeout: 5000, state: "attached" });
+    await page.waitForTimeout(500);
+
+    const popup = await context.newPage();
+    await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+    await popup.getByTitle("最近見たチケット").click();
+
+    await expect(popup.getByText("ISS-42", { exact: true })).toBeVisible();
+  });
+});

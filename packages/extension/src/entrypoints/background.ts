@@ -4,7 +4,16 @@ import { ticketsStorage, settingsStorage, recentlyViewedStorage, RECENTLY_VIEWED
 import type { ExtensionMessage, JiraTicket, RecentlyViewedTicket } from "../types";
 
 const CONTENT_SCRIPT_ID = "jira-content-script";
-const DEFAULT_JIRA_PATTERN = "*://*.atlassian.net/browse/*";
+
+// atlassian.net で対応するURL パターン:
+//   /browse/PROJ-123          — 直接チケット URL
+//   /issues/PROJ-123          — 一部バージョンの別パス
+//   /jira/...?selectedIssue=  — ボード画面でのチケット選択
+const DEFAULT_JIRA_PATTERNS = [
+  "*://*.atlassian.net/browse/*",
+  "*://*.atlassian.net/issues/*",
+  "*://*.atlassian.net/jira/*",
+];
 
 /**
  * jiraBaseUrl から match pattern を生成
@@ -13,7 +22,7 @@ const DEFAULT_JIRA_PATTERN = "*://*.atlassian.net/browse/*";
  */
 function buildMatchPattern(jiraBaseUrl: string | undefined): string[] {
   if (!jiraBaseUrl) {
-    return [DEFAULT_JIRA_PATTERN];
+    return DEFAULT_JIRA_PATTERNS;
   }
 
   try {
@@ -24,7 +33,7 @@ function buildMatchPattern(jiraBaseUrl: string | undefined): string[] {
     return [pattern];
   } catch {
     // 無効な URL の場合はデフォルトにフォールバック
-    return [DEFAULT_JIRA_PATTERN];
+    return DEFAULT_JIRA_PATTERNS;
   }
 }
 

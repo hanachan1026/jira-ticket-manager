@@ -16,7 +16,7 @@ const baseTicket: JiraTicket = {
 const baseSettings: Pick<UserSettings, "defaultPrefix"> = { defaultPrefix: "feat" };
 
 function tmpl(pattern: string): CopyTemplate {
-  return { id: "t1", name: "test", pattern };
+  return { id: "t1", name: "test", pattern, isDefault: false };
 }
 
 describe("applyTemplate – token substitution", () => {

@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon, ClockIcon } from "lucide-react";
+import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon, ClockIcon, HelpCircleIcon } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { TicketCard } from "../../components/TicketCard";
 import { TicketForm } from "../../components/TicketForm";
 import { DailyReportPanel } from "../../components/DailyReportPanel";
 import { SettingsPanel } from "../../components/SettingsPanel";
 import { RecentlyViewedPanel } from "../../components/RecentlyViewedPanel";
+import { HelpPanel } from "../../components/HelpPanel";
 import { Toast } from "../../components/ui/Toast";
 import { useTickets } from "../../hooks/useTickets";
 import { useTemplates } from "../../hooks/useTemplates";
@@ -15,7 +16,7 @@ import { useClipboard } from "../../hooks/useClipboard";
 import { useStorage } from "../../storage/StorageContext";
 import type { JiraTicket, ExtensionMessage } from "../../types";
 
-type View = "list" | "add" | "edit" | "daily" | "settings" | "recent";
+type View = "list" | "add" | "edit" | "daily" | "settings" | "recent" | "help";
 
 export function App() {
   const { isReady, mode, tickets: ticketsAdapter } = useStorage();
@@ -142,6 +143,13 @@ export function App() {
                 className="w-full pl-7 pr-3 py-1.5 text-xs border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
               />
             </div>
+            <button
+              onClick={() => setView("help")}
+              title="使い方"
+              className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors"
+            >
+              <HelpCircleIcon size={15} />
+            </button>
             <Button
               variant="primary"
               size="sm"
@@ -265,6 +273,15 @@ export function App() {
           settings={settings}
           onClose={() => setView("list")}
         />
+      </div>
+    );
+  }
+
+  // ── Help view ──────────────────────────────────────────────────────────────
+  if (view === "help") {
+    return (
+      <div className="flex flex-col h-full">
+        <HelpPanel onClose={() => setView("list")} />
       </div>
     );
   }

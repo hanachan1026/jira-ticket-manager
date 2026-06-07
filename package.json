@@ -5,6 +5,7 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "pnpm --filter extension dev",
-    "build": "pnpm --filter extension build"
+    "build": "pnpm --filter extension build",
+    "test": "pnpm --filter extension test"
   }
 }

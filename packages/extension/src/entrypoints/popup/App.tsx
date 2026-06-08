@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon, ClockIcon, HelpCircleIcon } from "lucide-react";
+import { PlusIcon, ClipboardListIcon, SettingsIcon, SearchIcon, StarIcon, ClockIcon, HelpCircleIcon, CopyIcon, CheckIcon, ExternalLinkIcon } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { TicketCard } from "../../components/TicketCard";
 import { TicketForm } from "../../components/TicketForm";
@@ -13,6 +13,7 @@ import { useTemplates } from "../../hooks/useTemplates";
 import { useSettings } from "../../hooks/useSettings";
 import { useWipStatus } from "../../hooks/useWipStatus";
 import { useClipboard } from "../../hooks/useClipboard";
+import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
 import { useStorage } from "../../storage/StorageContext";
 import type { JiraTicket, ExtensionMessage } from "../../types";
 
@@ -35,6 +36,7 @@ export function App() {
   } = useSettings();
   const { wipStatus, toggleInProgress, isInProgress } = useWipStatus();
   const { copy, copiedId } = useClipboard();
+  const { recentlyViewed } = useRecentlyViewed();
 
   // ファイルモード時のキュー処理
   useEffect(() => {
@@ -94,6 +96,13 @@ export function App() {
     }
     return result;
   }, [tickets, search, todayOnly, isInProgress]);
+
+  // 保存済みに含まれない最近見たチケット（最大3件）
+  const savedNumbers = useMemo(() => new Set(tickets.map((t) => t.number)), [tickets]);
+  const unsavedRecent = useMemo(
+    () => recentlyViewed.filter((r) => !savedNumbers.has(r.number)).slice(0, 3),
+    [recentlyViewed, savedNumbers]
+  );
 
   // ストレージ初期化待ち
   if (!isReady) {
@@ -212,6 +221,64 @@ export function App() {
             ))
           )}
         </div>
+
+        {/* 最近見た（未保存のもの、最大3件） */}
+        {unsavedRecent.length > 0 && !todayOnly && (
+          <div className="px-3 pb-2">
+            <div className="border-t border-gray-100 pt-2">
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <ClockIcon size={11} />
+                  <span>最近見た</span>
+                </div>
+                <button
+                  onClick={() => setView("recent")}
+                  className="text-xs text-blue-500 hover:underline"
+                >
+                  すべて見る
+                </button>
+              </div>
+              <div className="space-y-1">
+                {unsavedRecent.map((ticket) => {
+                  const copyId = `inline-recent-${ticket.number}`;
+                  return (
+                    <div
+                      key={`${ticket.number}-${ticket.viewedAt}`}
+                      className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-gray-50 transition-colors"
+                    >
+                      <span className="text-xs font-mono font-medium text-blue-600 shrink-0">
+                        {ticket.number}
+                      </span>
+                      <span className="text-xs text-gray-500 truncate flex-1">
+                        {ticket.title}
+                      </span>
+                      <button
+                        onClick={() => handleCopy(ticket.number, copyId)}
+                        title="チケット番号をコピー"
+                        className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors shrink-0"
+                      >
+                        {copiedId === copyId ? (
+                          <CheckIcon size={11} className="text-green-500" />
+                        ) : (
+                          <CopyIcon size={11} />
+                        )}
+                      </button>
+                      <a
+                        href={ticket.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Jira で開く"
+                        className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors shrink-0"
+                      >
+                        <ExternalLinkIcon size={11} />
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* フッター */}
         <div className="px-3 py-2 border-t border-gray-100 flex items-center justify-between">

@@ -50,15 +50,20 @@ export function detectTicketNumber(url: string = window.location.href): string |
  * Jira Cloud の DOM に依存するため fallback あり
  */
 export function detectTicketTitle(): string | null {
-  // Jira Cloud (2023~): data-testid を使用
-  const h1 = document.querySelector<HTMLElement>('h1[data-testid="issue-title"]');
-  if (h1?.textContent?.trim()) return h1.textContent.trim();
+  // Jira Cloud (2023~) /browse/ ページ
+  const browseH1 = document.querySelector<HTMLElement>('h1[data-testid="issue-title"]');
+  if (browseH1?.textContent?.trim()) return browseH1.textContent.trim();
+
+  // Jira Cloud ボード/バックログのモーダル・サイドパネル
+  const modalH1 = document.querySelector<HTMLElement>(
+    'h1[data-testid="issue.views.issue-base.foundation.summary.heading"]'
+  );
+  if (modalH1?.textContent?.trim()) return modalH1.textContent.trim();
 
   // 旧 Jira Cloud: summary フィールド
   const summary = document.querySelector<HTMLElement>("#summary-val, .issue-summary");
   if (summary?.textContent?.trim()) return summary.textContent.trim();
 
-  // Fallback: document.title から " - Jira" などを除去
-  const title = document.title.split(" - ")[0].trim();
-  return title || null;
+  // document.title は使わない: ボード画面では Sprint 名などが入り誤検知する
+  return null;
 }

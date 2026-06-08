@@ -53,9 +53,14 @@ describe("detectTicketTitle", () => {
     Object.defineProperty(document, "title", { value: "", writable: true, configurable: true });
   });
 
-  test("reads from h1[data-testid='issue-title']", () => {
+  test("reads from h1[data-testid='issue-title'] (/browse/ page)", () => {
     document.body.innerHTML = `<h1 data-testid="issue-title">Fix login bug</h1>`;
     expect(detectTicketTitle()).toBe("Fix login bug");
+  });
+
+  test("reads from board modal h1[data-testid='issue.views.issue-base.foundation.summary.heading']", () => {
+    document.body.innerHTML = `<h1 data-testid="issue.views.issue-base.foundation.summary.heading">LinkedIn CXOポジションの人へDM送信</h1>`;
+    expect(detectTicketTitle()).toBe("LinkedIn CXOポジションの人へDM送信");
   });
 
   test("falls back to #summary-val", () => {
@@ -68,13 +73,9 @@ describe("detectTicketTitle", () => {
     expect(detectTicketTitle()).toBe("Summary text");
   });
 
-  test("falls back to document.title stripping ' - Jira'", () => {
-    Object.defineProperty(document, "title", { value: "PROJ-123 - Jira", writable: true, configurable: true });
-    document.body.innerHTML = "";
-    expect(detectTicketTitle()).toBe("PROJ-123");
-  });
-
-  test("returns null for empty DOM and empty title", () => {
+  test("returns null when no matching DOM elements exist (does NOT read document.title)", () => {
+    // ボード画面では document.title に sprint 名が入るため誤検知を防ぐ
+    Object.defineProperty(document, "title", { value: "GCM Sprint 13 - Jira", writable: true, configurable: true });
     document.body.innerHTML = "";
     expect(detectTicketTitle()).toBeNull();
   });

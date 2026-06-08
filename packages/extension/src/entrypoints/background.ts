@@ -50,17 +50,20 @@ async function registerContentScript(jiraBaseUrl: string | undefined): Promise<v
     // 未登録の場合は無視
   }
 
-  // 新しいパターンで登録
-  await chrome.scripting.registerContentScripts([
-    {
-      id: CONTENT_SCRIPT_ID,
-      matches,
-      js: ["content-scripts/jira.js"],
-      runAt: "document_idle",
-    },
-  ]);
-
-  console.log(`[JiraTicketManager] Content script registered for: ${matches.join(", ")}`);
+  try {
+    // 新しいパターンで登録
+    await chrome.scripting.registerContentScripts([
+      {
+        id: CONTENT_SCRIPT_ID,
+        matches,
+        js: ["content-scripts/jira.js"],
+        runAt: "document_idle",
+      },
+    ]);
+    console.log(`[JiraTicketManager] Content script registered for: ${matches.join(", ")}`);
+  } catch (err) {
+    console.error("[JiraTicketManager] Failed to register content script:", err);
+  }
 }
 
 export default defineBackground(() => {

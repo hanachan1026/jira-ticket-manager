@@ -15,6 +15,7 @@ import { useWipStatus } from "../../hooks/useWipStatus";
 import { useClipboard } from "../../hooks/useClipboard";
 import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
 import { useStorage } from "../../storage/StorageContext";
+import { detectTicketNumber } from "../../utils/jiraDetector";
 import type { JiraTicket, RecentlyViewedTicket, ExtensionMessage } from "../../types";
 
 type View = "list" | "add" | "edit" | "daily" | "settings" | "recent" | "help";
@@ -79,6 +80,7 @@ export function App() {
 
   const [view, setView] = useState<View>("list");
   const [editingTicket, setEditingTicket] = useState<JiraTicket | null>(null);
+  const [formInitialData, setFormInitialData] = useState<Partial<JiraTicket> | undefined>();
   const [search, setSearch] = useState("");
   const [todayOnly, setTodayOnly] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
@@ -118,6 +120,21 @@ export function App() {
     setToastMsg(`コピーしました: ${text}`);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 1500);
+  };
+
+  const handleOpenAdd = async () => {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab?.url) {
+        const number = detectTicketNumber(tab.url);
+        setFormInitialData(number ? { number, url: tab.url } : undefined);
+      } else {
+        setFormInitialData(undefined);
+      }
+    } catch {
+      setFormInitialData(undefined);
+    }
+    setView("add");
   };
 
   const handleAdd = async (data: Omit<JiraTicket, "id" | "createdAt" | "updatedAt">) => {
@@ -167,7 +184,7 @@ export function App() {
             <Button
               variant="primary"
               size="sm"
-              onClick={() => setView("add")}
+              onClick={handleOpenAdd}
               title="チケットを追加"
             >
               <PlusIcon size={14} className="mr-1" />
@@ -194,18 +211,49 @@ export function App() {
           {loading ? (
             <div className="text-xs text-gray-400 text-center py-8">読み込み中...</div>
           ) : filteredTickets.length === 0 ? (
-            <div className="text-xs text-gray-400 text-center py-8">
-              {search || todayOnly ? "該当するチケットがありません" : "チケットがまだありません"}
-              <br />
-              {!search && !todayOnly && (
-                <button
-                  onClick={() => setView("add")}
-                  className="mt-2 text-blue-500 hover:underline"
-                >
-                  最初のチケットを追加する
-                </button>
+            <>
+              <div className="text-xs text-gray-400 text-center pt-4 pb-2">
+                {search || todayOnly ? "該当するチケットがありません" : "チケットがまだありません"}
+                {!search && !todayOnly && (
+                  <>
+                    <br />
+                    <button
+                      onClick={handleOpenAdd}
+                      className="mt-2 text-blue-500 hover:underline"
+                    >
+                      最初のチケットを追加する
+                    </button>
+                  </>
+                )}
+              </div>
+              {!search && !todayOnly && unsavedRecent.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center justify-between px-1 mb-1">
+                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                      <ClockIcon size={11} />
+                      <span>最近見た</span>
+                    </div>
+                    <button onClick={() => setView("recent")} className="text-xs text-blue-500 hover:underline">
+                      すべて見る
+                    </button>
+                  </div>
+                  {unsavedRecent.map((ticket) => {
+                    const copyId = `inline-recent-${ticket.number}`;
+                    return (
+                      <div key={`${ticket.number}-${ticket.viewedAt}`} className="group flex items-center gap-1.5 px-2 py-1 rounded hover:bg-gray-50 transition-colors">
+                        <span className="text-xs font-mono font-medium text-blue-600 shrink-0">{ticket.number}</span>
+                        <span className="text-xs text-gray-500 truncate flex-1">{ticket.title}</span>
+                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                          <button onClick={() => handleAddRecentAsWip(ticket)} title="保存して作業中にセット" aria-label="保存して作業中にセット" className="p-0.5 rounded text-gray-300 hover:text-yellow-500 transition-colors"><StarIcon size={11} /></button>
+                          <button onClick={() => handleCopy(ticket.number, copyId)} title="チケット番号をコピー" aria-label="チケット番号をコピー" className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors">{copiedId === copyId ? <CheckIcon size={11} className="text-green-500" /> : <CopyIcon size={11} />}</button>
+                          <a href={ticket.url} target="_blank" rel="noopener noreferrer" title="Jira で開く" aria-label="Jira で開く" className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors"><ExternalLinkIcon size={11} /></a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
-            </div>
+            </>
           ) : (
             filteredTickets.map((ticket) => (
               <TicketCard
@@ -227,8 +275,8 @@ export function App() {
           )}
         </div>
 
-        {/* 最近見た（未保存のもの、最大3件） */}
-        {unsavedRecent.length > 0 && !todayOnly && (
+        {/* 最近見た（チケットがある場合のみ、未保存最大3件） */}
+        {unsavedRecent.length > 0 && !todayOnly && filteredTickets.length > 0 && (
           <div className="px-3 pb-2">
             <div className="border-t border-gray-100 pt-2">
               <div className="flex items-center justify-between mb-1.5">
@@ -249,7 +297,7 @@ export function App() {
                   return (
                     <div
                       key={`${ticket.number}-${ticket.viewedAt}`}
-                      className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-gray-50 transition-colors"
+                      className="group flex items-center gap-1.5 px-2 py-1 rounded hover:bg-gray-50 transition-colors"
                     >
                       <span className="text-xs font-mono font-medium text-blue-600 shrink-0">
                         {ticket.number}
@@ -257,33 +305,38 @@ export function App() {
                       <span className="text-xs text-gray-500 truncate flex-1">
                         {ticket.title}
                       </span>
-                      <button
-                        onClick={() => handleAddRecentAsWip(ticket)}
-                        title="保存して作業中にセット"
-                        className="p-0.5 rounded text-gray-300 hover:text-yellow-500 transition-colors shrink-0"
-                      >
-                        <StarIcon size={11} />
-                      </button>
-                      <button
-                        onClick={() => handleCopy(ticket.number, copyId)}
-                        title="チケット番号をコピー"
-                        className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors shrink-0"
-                      >
-                        {copiedId === copyId ? (
-                          <CheckIcon size={11} className="text-green-500" />
-                        ) : (
-                          <CopyIcon size={11} />
-                        )}
-                      </button>
-                      <a
-                        href={ticket.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Jira で開く"
-                        className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors shrink-0"
-                      >
-                        <ExternalLinkIcon size={11} />
-                      </a>
+                      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                        <button
+                          onClick={() => handleAddRecentAsWip(ticket)}
+                          title="保存して作業中にセット"
+                          aria-label="保存して作業中にセット"
+                          className="p-0.5 rounded text-gray-300 hover:text-yellow-500 transition-colors"
+                        >
+                          <StarIcon size={11} />
+                        </button>
+                        <button
+                          onClick={() => handleCopy(ticket.number, copyId)}
+                          title="チケット番号をコピー"
+                          aria-label="チケット番号をコピー"
+                          className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors"
+                        >
+                          {copiedId === copyId ? (
+                            <CheckIcon size={11} className="text-green-500" />
+                          ) : (
+                            <CopyIcon size={11} />
+                          )}
+                        </button>
+                        <a
+                          href={ticket.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Jira で開く"
+                          aria-label="Jira で開く"
+                          className="p-0.5 rounded text-gray-300 hover:text-gray-500 transition-colors"
+                        >
+                          <ExternalLinkIcon size={11} />
+                        </a>
+                      </div>
                     </div>
                   );
                 })}
@@ -320,7 +373,7 @@ export function App() {
   if (view === "add") {
     return (
       <div className="p-3 h-full bg-white overflow-y-auto">
-        <TicketForm onSave={handleAdd} onCancel={() => setView("list")} />
+        <TicketForm initialData={formInitialData} onSave={handleAdd} onCancel={() => setView("list")} />
       </div>
     );
   }

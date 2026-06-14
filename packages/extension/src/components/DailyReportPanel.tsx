@@ -70,11 +70,12 @@ export function DailyReportPanel({
           className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
           {templates.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name} — {t.pattern}
-            </option>
+            <option key={t.id} value={t.id}>{t.name}</option>
           ))}
         </select>
+        {lineTemplate && (
+          <p className="text-xs text-gray-400 font-mono mt-1 truncate">{lineTemplate.pattern}</p>
+        )}
       </div>
 
       {/* チケット選択リスト */}

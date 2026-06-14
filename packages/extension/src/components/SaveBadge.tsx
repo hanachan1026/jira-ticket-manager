@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BookmarkPlusIcon, CheckIcon, XIcon } from "lucide-react";
 import type { ExtensionMessage } from "../types";
 
@@ -13,6 +13,12 @@ type State = "idle" | "expanded" | "saving" | "saved" | "duplicate";
 export function SaveBadge({ number, title, url }: SaveBadgeProps) {
   const [state, setState] = useState<State>("idle");
   const [editTitle, setEditTitle] = useState(title);
+
+  useEffect(() => {
+    if (state !== "saved" && state !== "duplicate") return;
+    const timer = setTimeout(() => setState("idle"), 3000);
+    return () => clearTimeout(timer);
+  }, [state]);
 
   const handleSave = async () => {
     setState("saving");

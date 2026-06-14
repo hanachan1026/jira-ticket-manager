@@ -32,6 +32,17 @@ interface Props {
 export function RecentlyViewedPanel({ onClose, onCopy, copiedId }: Props) {
   const { recentlyViewed, loading } = useRecentlyViewed();
   const { recentlyViewed: adapter } = useStorage();
+  const [confirmClear, setConfirmClear] = React.useState(false);
+
+  const handleClearClick = () => {
+    if (confirmClear) {
+      adapter.setValue([]);
+      setConfirmClear(false);
+    } else {
+      setConfirmClear(true);
+      setTimeout(() => setConfirmClear(false), 3000);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -50,11 +61,11 @@ export function RecentlyViewedPanel({ onClose, onCopy, copiedId }: Props) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => adapter.setValue([])}
-            className="text-xs text-gray-400"
+            onClick={handleClearClick}
+            className={`text-xs transition-colors ${confirmClear ? "text-red-500 hover:text-red-600" : "text-gray-400"}`}
           >
             <Trash2Icon size={12} className="mr-1" />
-            クリア
+            {confirmClear ? "本当にクリア？" : "クリア"}
           </Button>
         )}
       </div>
@@ -92,7 +103,7 @@ function RecentlyViewedRow({
 }) {
   const copyId = `recent-${ticket.number}-${ticket.viewedAt}`;
   return (
-    <div className="flex items-start gap-2 p-2 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors">
+    <div className="group flex items-start gap-2 p-2 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-colors">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 mb-0.5">
           <span className="text-xs font-mono font-medium text-blue-600">
@@ -104,10 +115,11 @@ function RecentlyViewedRow({
         </div>
         <p className="text-xs text-gray-700 truncate">{ticket.title}</p>
       </div>
-      <div className="flex items-center gap-0.5 shrink-0 pt-0.5">
+      <div className="flex items-center gap-0.5 shrink-0 pt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={() => onCopy(ticket.number, copyId)}
           title="チケット番号をコピー"
+          aria-label="チケット番号をコピー"
           className="p-1 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
         >
           {copiedId === copyId ? (
@@ -121,6 +133,7 @@ function RecentlyViewedRow({
           target="_blank"
           rel="noopener noreferrer"
           title="Jira で開く"
+          aria-label="Jira で開く"
           className="p-1 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
         >
           <ExternalLinkIcon size={12} />

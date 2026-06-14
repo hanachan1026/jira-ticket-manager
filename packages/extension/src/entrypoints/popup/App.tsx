@@ -15,7 +15,7 @@ import { useWipStatus } from "../../hooks/useWipStatus";
 import { useClipboard } from "../../hooks/useClipboard";
 import { useRecentlyViewed } from "../../hooks/useRecentlyViewed";
 import { useStorage } from "../../storage/StorageContext";
-import type { JiraTicket, ExtensionMessage } from "../../types";
+import type { JiraTicket, RecentlyViewedTicket, ExtensionMessage } from "../../types";
 
 type View = "list" | "add" | "edit" | "daily" | "settings" | "recent" | "help";
 
@@ -123,6 +123,11 @@ export function App() {
   const handleAdd = async (data: Omit<JiraTicket, "id" | "createdAt" | "updatedAt">) => {
     await addTicket(data);
     setView("list");
+  };
+
+  const handleAddRecentAsWip = async (recent: RecentlyViewedTicket) => {
+    const ticket = await addTicket({ number: recent.number, title: recent.title, url: recent.url });
+    await toggleInProgress(ticket.id);
   };
 
   const handleUpdate = async (data: Omit<JiraTicket, "id" | "createdAt" | "updatedAt">) => {
@@ -252,6 +257,13 @@ export function App() {
                       <span className="text-xs text-gray-500 truncate flex-1">
                         {ticket.title}
                       </span>
+                      <button
+                        onClick={() => handleAddRecentAsWip(ticket)}
+                        title="保存して作業中にセット"
+                        className="p-0.5 rounded text-gray-300 hover:text-yellow-500 transition-colors shrink-0"
+                      >
+                        <StarIcon size={11} />
+                      </button>
                       <button
                         onClick={() => handleCopy(ticket.number, copyId)}
                         title="チケット番号をコピー"

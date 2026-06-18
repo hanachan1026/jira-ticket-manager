@@ -21,6 +21,15 @@ interface SettingsPanelProps {
   requestFilePermission: () => Promise<boolean>;
   isFileStorageAvailable: boolean;
   needsPermission: boolean;
+  // カスタムドメイン権限
+  requestCustomDomainPermission?: () => Promise<boolean>;
+  hasCustomDomainPermission?: boolean;
+}
+
+function isCustomDomain(url?: string): boolean {
+  if (!url) return false;
+  try { return !new URL(url).hostname.endsWith(".atlassian.net"); }
+  catch { return false; }
 }
 
 export function SettingsPanel({
@@ -37,6 +46,8 @@ export function SettingsPanel({
   requestFilePermission,
   isFileStorageAvailable,
   needsPermission,
+  requestCustomDomainPermission,
+  hasCustomDomainPermission,
 }: SettingsPanelProps) {
   const [newTmplName, setNewTmplName] = useState("");
   const [newTmplPattern, setNewTmplPattern] = useState("");
@@ -232,6 +243,23 @@ export function SettingsPanel({
         <p className="text-xs text-gray-400 mt-1">
           ※ コンテンツスクリプトによるチケット自動検出に使用します
         </p>
+        {isCustomDomain(settings.jiraBaseUrl) && (
+          hasCustomDomainPermission ? (
+            <p className="text-xs text-green-600 flex items-center gap-1 mt-1.5">
+              <CheckCircleIcon size={10} /> カスタムドメインへのアクセスが許可されています
+            </p>
+          ) : (
+            <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+              <AlertTriangleIcon size={10} className="text-amber-500" />
+              <span className="text-xs text-amber-600">このドメインへのアクセス権限が必要です</span>
+              {requestCustomDomainPermission && (
+                <Button variant="secondary" size="sm" onClick={requestCustomDomainPermission}>
+                  <KeyIcon size={10} className="mr-1" />権限を付与
+                </Button>
+              )}
+            </div>
+          )
+        )}
       </div>
 
       {/* コピーテンプレート管理 */}

@@ -58,4 +58,5 @@ export type ExtensionMessage =
   | { type: "SAVE_TICKET"; payload: Omit<JiraTicket, "id" | "createdAt" | "updatedAt"> }
   | { type: "GET_TICKETS" }
   | { type: "TRACK_TICKET_VIEW"; payload: Omit<RecentlyViewedTicket, "viewedAt"> }
-  | { type: "PROCESS_FILE_QUEUE" }; // popup にキュー処理を依頼
+  | { type: "PROCESS_FILE_QUEUE" } // popup にキュー処理を依頼
+  | { type: "RE_REGISTER_CONTENT_SCRIPT" };

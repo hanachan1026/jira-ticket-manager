@@ -85,6 +85,18 @@ export function App() {
   const [todayOnly, setTodayOnly] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [hasCustomDomainPermission, setHasCustomDomainPermission] = useState(false);
+
+  useEffect(() => {
+    const url = settings.jiraBaseUrl;
+    if (!url) { setHasCustomDomainPermission(false); return; }
+    try {
+      const { protocol, host } = new URL(url);
+      if (host.endsWith(".atlassian.net")) { setHasCustomDomainPermission(false); return; }
+      chrome.permissions.contains({ origins: [`${protocol}//${host}/*`] })
+        .then(setHasCustomDomainPermission);
+    } catch { setHasCustomDomainPermission(false); }
+  }, [settings.jiraBaseUrl]);
 
   const filteredTickets = useMemo(() => {
     let result = tickets;
@@ -120,6 +132,20 @@ export function App() {
     setToastMsg(`コピーしました: ${text}`);
     setShowToast(true);
     setTimeout(() => setShowToast(false), 1500);
+  };
+
+  const handleRequestCustomDomainPermission = async (): Promise<boolean> => {
+    const url = settings.jiraBaseUrl;
+    if (!url) return false;
+    try {
+      const { protocol, host } = new URL(url);
+      const granted = await chrome.permissions.request({ origins: [`${protocol}//${host}/*`] });
+      if (granted) {
+        setHasCustomDomainPermission(true);
+        await chrome.runtime.sendMessage({ type: "RE_REGISTER_CONTENT_SCRIPT" });
+      }
+      return granted;
+    } catch { return false; }
   };
 
   const handleOpenAdd = async () => {
@@ -450,6 +476,8 @@ export function App() {
           requestFilePermission={requestFilePermission}
           isFileStorageAvailable={isFileStorageAvailable}
           needsPermission={needsPermission}
+          requestCustomDomainPermission={handleRequestCustomDomainPermission}
+          hasCustomDomainPermission={hasCustomDomainPermission}
         />
       </div>
     );

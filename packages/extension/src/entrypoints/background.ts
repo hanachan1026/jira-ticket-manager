@@ -40,6 +40,10 @@ export default defineBackground(() => {
         handleTrackTicketView(msg.payload).then(sendResponse);
         return true;
       }
+      if (msg.type === "RE_REGISTER_CONTENT_SCRIPT") {
+        settingsStorage.getValue().then((settings) => registerContentScript(settings.jiraBaseUrl)).then(() => sendResponse({ success: true }));
+        return true;
+      }
     }
   );
 

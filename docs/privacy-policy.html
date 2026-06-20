@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Jira Ticket Manager</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 720px;
+      margin: 48px auto;
+      padding: 0 24px;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 4px; }
+    h2 { font-size: 1.1rem; margin-top: 2rem; }
+    h3 { font-size: 1rem; margin-top: 1.25rem; color: #333; }
+    p.meta { color: #666; font-size: 0.9rem; margin-top: 0; }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 1.5rem 0; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.9rem; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+    th { background: #f5f5f5; }
+    code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+    ul { padding-left: 1.5rem; }
+    a { color: #0066cc; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy — Jira Ticket Manager</h1>
+  <p class="meta">
+    <strong>Effective date:</strong> 2026-06-18<br>
+    <strong>Extension:</strong> Jira Ticket Manager (Chrome Web Store)
+  </p>
+
+  <hr>
+
+  <h2>Summary</h2>
+  <p>
+    Jira Ticket Manager does <strong>not</strong> collect, transmit, or sell any personal data to external servers.
+    All data is stored locally on your device or synced via your own Google account through Chrome's built-in sync infrastructure.
+  </p>
+
+  <hr>
+
+  <h2>Data Stored</h2>
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Where</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Jira ticket info (number, title, URL)</td><td>Chrome Storage (sync or local)</td><td>Display and copy in popup</td></tr>
+      <tr><td>Copy templates</td><td>Chrome Storage (sync)</td><td>User-defined format patterns</td></tr>
+      <tr><td>Settings (Jira base URL, git prefix, etc.)</td><td>Chrome Storage (sync)</td><td>Extension configuration</td></tr>
+      <tr><td>Recently viewed tickets</td><td>Chrome Storage (local)</td><td>Auto-tracked from Jira page visits</td></tr>
+    </tbody>
+  </table>
+  <p>
+    All data remains on your device. When Chrome Sync is enabled, data is synced via Google's infrastructure
+    under your Google account — this is governed by
+    <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.
+  </p>
+
+  <hr>
+
+  <h2>Permissions and Why We Need Them</h2>
+
+  <h3><code>storage</code></h3>
+  <p>Used to persist your saved tickets, templates, and settings in Chrome's storage API. No data is sent to any external server.</p>
+
+  <h3><code>scripting</code></h3>
+  <p>Used to dynamically register a content script on Jira pages you visit. The script detects the Jira ticket number and title from the page URL and DOM, and shows a "Save" badge. The script runs only on Jira domains you have authorized.</p>
+
+  <h3><code>tabs</code></h3>
+  <p>Used only when you click the "Add" button in the popup — the extension reads the current tab's URL to pre-fill the ticket number field. Tab URLs are never stored or transmitted.</p>
+
+  <h3><code>clipboardWrite</code></h3>
+  <p>Used when you click a copy button in the popup. The formatted text is written directly to your clipboard. No data is sent externally.</p>
+
+  <h3>Optional host permission (<code>*://*/*</code>)</h3>
+  <p>Requested at runtime only if you configure a custom (non-atlassian.net) Jira domain in Settings. This allows the content script to run on your self-hosted Jira instance. You will see a Chrome permission dialog before this is granted.</p>
+
+  <hr>
+
+  <h2>Data We Do NOT Collect</h2>
+  <ul>
+    <li>No analytics or telemetry</li>
+    <li>No crash reporting to external services</li>
+    <li>No user identifiers, IP addresses, or device fingerprints</li>
+    <li>No Jira credentials or authentication tokens</li>
+  </ul>
+
+  <hr>
+
+  <h2>Third-Party Services</h2>
+  <p>
+    This extension does not integrate with any third-party services. The only external interaction is Chrome Sync,
+    which is a Google service tied to your Google account.
+  </p>
+
+  <hr>
+
+  <h2>Changes to This Policy</h2>
+  <p>
+    If the privacy policy changes in a meaningful way, the extension version will be updated and this document will reflect the new effective date.
+  </p>
+
+  <hr>
+
+  <h2>Contact</h2>
+  <p>
+    For questions or concerns, please open an issue on
+    <a href="https://github.com/hanachan1026/jira-ticket-manager">GitHub</a>.
+  </p>
+</body>
+</html>

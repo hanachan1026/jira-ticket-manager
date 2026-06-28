@@ -6,3 +6,6 @@ packages/extension/.wxt/
 
 # User data files
 jira-tickets.json
+
+# Local dev tool config (machine-specific paths)
+.mcp.json

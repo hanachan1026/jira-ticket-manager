@@ -61,19 +61,20 @@ export function TicketCard({
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-sm font-semibold text-blue-600 shrink-0">
-              {ticket.number}
-            </span>
-            {ticket.url && (
+            {ticket.url ? (
               <a
                 href={ticket.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-600"
+                className="font-mono text-sm font-semibold text-blue-600 shrink-0 hover:underline"
                 onClick={(e) => e.stopPropagation()}
               >
-                <ExternalLinkIcon size={11} />
+                {ticket.number}
               </a>
+            ) : (
+              <span className="font-mono text-sm font-semibold text-blue-600 shrink-0">
+                {ticket.number}
+              </span>
             )}
           </div>
           <p className="text-xs text-gray-700 mt-0.5 line-clamp-2 leading-relaxed">

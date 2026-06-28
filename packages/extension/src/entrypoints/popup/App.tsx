@@ -92,6 +92,7 @@ export function App() {
     if (!url) { setHasCustomDomainPermission(false); return; }
     try {
       const { protocol, host } = new URL(url);
+      if (!["http:", "https:"].includes(protocol)) { setHasCustomDomainPermission(false); return; }
       if (host.endsWith(".atlassian.net")) { setHasCustomDomainPermission(false); return; }
       chrome.permissions.contains({ origins: [`${protocol}//${host}/*`] })
         .then(setHasCustomDomainPermission);
@@ -139,6 +140,7 @@ export function App() {
     if (!url) return false;
     try {
       const { protocol, host } = new URL(url);
+      if (!["http:", "https:"].includes(protocol)) return false;
       const granted = await chrome.permissions.request({ origins: [`${protocol}//${host}/*`] });
       if (granted) {
         setHasCustomDomainPermission(true);

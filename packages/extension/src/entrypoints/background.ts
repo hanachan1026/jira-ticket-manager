@@ -27,7 +27,9 @@ async function registerContentScript(jiraBaseUrl: string | undefined): Promise<v
 
 export default defineBackground(() => {
   chrome.runtime.onMessage.addListener(
-    (msg: ExtensionMessage, _sender, sendResponse: (response: unknown) => void) => {
+    (msg: ExtensionMessage, sender, sendResponse: (response: unknown) => void) => {
+      // Only accept messages from this extension's own pages and content scripts
+      if (sender.id !== chrome.runtime.id) return;
       if (msg.type === "SAVE_TICKET") {
         handleSaveTicket(msg.payload).then(sendResponse);
         return true;

@@ -28,8 +28,10 @@ interface SettingsPanelProps {
 
 function isCustomDomain(url?: string): boolean {
   if (!url) return false;
-  try { return !new URL(url).hostname.endsWith(".atlassian.net"); }
-  catch { return false; }
+  try {
+    const { protocol, hostname } = new URL(url);
+    return ["http:", "https:"].includes(protocol) && !hostname.endsWith(".atlassian.net");
+  } catch { return false; }
 }
 
 export function SettingsPanel({

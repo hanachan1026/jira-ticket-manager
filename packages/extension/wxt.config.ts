@@ -8,7 +8,7 @@ export default defineConfig({
     name: "Jira Ticket Manager",
     description:
       "Save Jira ticket info and copy it instantly — branch names, commit prefixes, daily reports.",
-    version: "0.1.0",
+    version: "0.1.1",
     permissions: ["storage", "clipboardWrite", "scripting", "tabs"],
     host_permissions: ["*://*.atlassian.net/*"],
     optional_host_permissions: ["*://*/*"],

@@ -58,6 +58,7 @@
     "message": "$count$件をコピー",
     "placeholders": { "count": { "content": "$1", "example": "3" } }
   },
+  "preview": { "message": "プレビュー" },
 
   "settingsTitle": { "message": "設定" },
   "settingsStorage": { "message": "データ保存先" },

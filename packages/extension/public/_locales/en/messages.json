@@ -58,6 +58,7 @@
     "message": "Copy $count$ items",
     "placeholders": { "count": { "content": "$1", "example": "3" } }
   },
+  "preview": { "message": "Preview" },
 
   "settingsTitle": { "message": "Settings" },
   "settingsStorage": { "message": "Data storage" },

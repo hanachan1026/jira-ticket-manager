@@ -311,13 +311,13 @@ export function App() {
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-1 text-xs text-gray-400">
                   <ClockIcon size={11} />
-                  <span>最近見た</span>
+                  <span>{t("listRecentlyViewed")}</span>
                 </div>
                 <button
                   onClick={() => setView("recent")}
                   className="text-xs text-blue-500 hover:underline"
                 >
-                  すべて見る
+                  {t("listSeeAll")}
                 </button>
               </div>
               <div className="space-y-1">

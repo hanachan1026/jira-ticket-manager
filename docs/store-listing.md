@@ -16,8 +16,7 @@ Save Jira ticket info and copy it instantly — branch names, commit prefixes, d
 
 ```
 Jira Ticket Manager is a Chrome extension for software developers who use Jira daily.
-
-** Note: This extension's UI is entirely in Japanese. **
+The UI is available in English and Japanese (automatically selected based on your browser language).
 
 KEY FEATURES
 
@@ -84,16 +83,18 @@ This permission is NOT granted at install time. It is requested at runtime only 
 ## 審査ノート（Notes to Reviewer）
 
 ```
-This extension's UI is in Japanese only. To test the core functionality without a Jira account:
+This extension supports English and Japanese. The UI language is selected automatically based on the browser's language settings.
+
+To test the core functionality without a Jira account:
 
 1. Install the extension.
-2. Open the popup — you can add tickets manually using the "追加" (Add) button.
+2. Open the popup — click the "Add" button to add a ticket manually.
 3. Type any ticket number (e.g. "PROJ-123") and title, then save.
-4. Use the copy buttons to see formatted output.
+4. Use the copy buttons (Branch / Commit / Number) to see formatted output.
 
 To test the Jira page integration (floating Save badge):
 - Navigate to any page on *.atlassian.net/browse/* while the extension is installed.
-- A blue floating button labeled "[ticket-number] を保存" will appear in the bottom-right corner.
+- A blue floating button labeled "Save [ticket-number]" will appear in the bottom-right corner.
 
 A free Atlassian account can be created at https://www.atlassian.com/try/cloud/signup to access a Jira Cloud sandbox if needed for review.
 ```

@@ -5,9 +5,9 @@ export default defineConfig({
   extensionApi: "chrome",
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: "Jira Ticket Manager",
-    description:
-      "Save Jira ticket info and copy it instantly — branch names, commit prefixes, daily reports.",
+    name: "__MSG_extensionName__",
+    description: "__MSG_extensionDescription__",
+    default_locale: "en",
     version: "0.1.1",
     permissions: ["storage", "clipboardWrite", "scripting", "tabs"],
     host_permissions: ["*://*.atlassian.net/*"],

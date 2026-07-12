@@ -1,0 +1,152 @@
+{
+  "extensionName": { "message": "Jira Ticket Manager" },
+  "extensionDescription": { "message": "Jira チケット情報を保存してコピー — ブランチ名、コミットプレフィックス、日報生成。" },
+
+  "loading": { "message": "読み込み中..." },
+  "cancel": { "message": "キャンセル" },
+  "save": { "message": "保存" },
+  "saving": { "message": "保存中..." },
+  "add": { "message": "追加" },
+  "edit": { "message": "編集" },
+  "delete": { "message": "削除" },
+  "settings": { "message": "設定" },
+  "grantPermission": { "message": "権限を付与" },
+  "copyTicketNumber": { "message": "チケット番号をコピー" },
+  "openInJira": { "message": "Jira で開く" },
+
+  "listSearchPlaceholder": { "message": "チケット番号・タイトルで検索..." },
+  "listHelpTooltip": { "message": "使い方" },
+  "listAddTooltip": { "message": "チケットを追加" },
+  "listWipFilter": { "message": "作業中" },
+  "listNoResults": { "message": "該当するチケットがありません" },
+  "listEmpty": { "message": "チケットがまだありません" },
+  "listAddFirst": { "message": "最初のチケットを追加する" },
+  "listRecentlyViewed": { "message": "最近見た" },
+  "listSeeAll": { "message": "すべて見る" },
+  "listSaveAsWip": { "message": "保存して作業中にセット" },
+  "listTicketCount": {
+    "message": "$count$ チケット",
+    "placeholders": { "count": { "content": "$1", "example": "5" } }
+  },
+  "listHistory": { "message": "履歴" },
+  "listDailyReport": { "message": "日報" },
+  "listCopied": {
+    "message": "コピーしました: $text$",
+    "placeholders": { "text": { "content": "$1", "example": "feat/PROJ-123" } }
+  },
+
+  "cardSetWip": { "message": "WIPにセット" },
+  "cardUnsetWip": { "message": "WIPを解除" },
+  "cardConfirmDelete": { "message": "もう一度クリックで削除" },
+
+  "formEditTitle": { "message": "チケットを編集" },
+  "formAddTitle": { "message": "チケットを追加" },
+  "formNumberLabel": { "message": "チケット番号 *" },
+  "formNumberRequired": { "message": "チケット番号は必須です" },
+  "formNumberFormat": { "message": "例: PROJ-123 の形式で入力してください" },
+  "formTitleLabel": { "message": "タイトル *" },
+  "formTitleRequired": { "message": "タイトルは必須です" },
+  "formNoteLabel": { "message": "メモ (任意)" },
+  "formNotePlaceholder": { "message": "作業内容の補足など..." },
+  "formJiraUrlLabel": { "message": "Jira URL (任意)" },
+
+  "dailyHeader": { "message": "📋 日報コピー" },
+  "dailyFormat": { "message": "フォーマット" },
+  "dailyNoTickets": { "message": "チケットがありません" },
+  "dailyCopied": { "message": "コピーしました" },
+  "dailyCopyCount": {
+    "message": "$count$件をコピー",
+    "placeholders": { "count": { "content": "$1", "example": "3" } }
+  },
+
+  "settingsTitle": { "message": "設定" },
+  "settingsStorage": { "message": "データ保存先" },
+  "settingsChromeSyncDesc": { "message": "デバイス間で同期" },
+  "settingsLocal": { "message": "ローカル" },
+  "settingsLocalDesc": { "message": "このブラウザのみ" },
+  "settingsLocalFile": { "message": "ローカルファイル" },
+  "settingsLocalFileDesc": { "message": "JSONファイルに保存" },
+  "settingsMigrating": { "message": "移行中..." },
+  "settingsMigrateBtn": { "message": "現在のデータをファイルに移行" },
+  "settingsFileEnabled": { "message": "ファイルストレージ有効" },
+  "settingsFileCancelled": { "message": "ファイルの選択がキャンセルされました" },
+  "settingsMigrationFailed": { "message": "移行に失敗しました" },
+  "settingsPermissionDenied": { "message": "権限が付与されませんでした" },
+  "settingsGitPrefix": { "message": "デフォルト Git プレフィックス" },
+  "settingsJiraUrl": { "message": "Jira ベース URL (任意)" },
+  "settingsJiraUrlHint": { "message": "※ コンテンツスクリプトによるチケット自動検出に使用します" },
+  "settingsCustomDomainGranted": { "message": "カスタムドメインへのアクセスが許可されています" },
+  "settingsCustomDomainRequired": { "message": "このドメインへのアクセス権限が必要です" },
+  "settingsTemplates": { "message": "コピーテンプレート" },
+  "settingsAddTemplate": { "message": "テンプレート追加" },
+  "settingsTemplateNamePlaceholder": { "message": "名前 (例: Slack mention)" },
+  "settingsTemplatePatternPlaceholder": { "message": "パターン (例: <{number}|{title}>)" },
+  "settingsTokensHint": { "message": "使えるトークン: {number} {title} {slug} {prefix} {date}" },
+  "settingsConfigure": { "message": "設定" },
+
+  "recentTitle": { "message": "最近見たチケット" },
+  "recentConfirmClear": { "message": "本当にクリア？" },
+  "recentClear": { "message": "クリア" },
+  "recentEmpty": { "message": "Jira ページを開くと自動で記録されます" },
+  "recentJustNow": { "message": "たった今" },
+  "recentMinAgo": {
+    "message": "$count$分前",
+    "placeholders": { "count": { "content": "$1", "example": "5" } }
+  },
+  "recentHrAgo": {
+    "message": "$count$時間前",
+    "placeholders": { "count": { "content": "$1", "example": "2" } }
+  },
+  "recentDaysAgo": {
+    "message": "$count$日前",
+    "placeholders": { "count": { "content": "$1", "example": "3" } }
+  },
+
+  "badgeIdle": {
+    "message": "$number$ を保存",
+    "placeholders": { "number": { "content": "$1", "example": "PROJ-123" } }
+  },
+  "badgeSaving": { "message": "保存中..." },
+  "badgeSaveBtn": { "message": "保存する" },
+  "badgeSaved": {
+    "message": "$number$ を保存しました",
+    "placeholders": { "number": { "content": "$1", "example": "PROJ-123" } }
+  },
+  "badgeDuplicate": {
+    "message": "$number$ は既に保存済みです",
+    "placeholders": { "number": { "content": "$1", "example": "PROJ-123" } }
+  },
+
+  "helpTitle": { "message": "使い方" },
+  "helpBasicsTitle": { "message": "基本操作" },
+  "helpAddLabel": { "message": "チケットを追加" },
+  "helpAddDesc": { "message": "右上の「追加」ボタンからチケット番号（例: PROJ-123）とタイトルを入力して保存します。" },
+  "helpCopyLabel": { "message": "コピー" },
+  "helpCopyDesc": { "message": "チケットカード下部の Branch / Commit / Number ボタンで各フォーマットをクリップボードにコピーします。" },
+  "helpWipLabel": { "message": "作業中（WIP）マーク" },
+  "helpWipDesc": { "message": "★ボタンで作業中フラグを付けられます。フッターの「作業中」フィルタで絞り込み可能です。" },
+  "helpDailyLabel": { "message": "日報コピー" },
+  "helpDailyDesc": { "message": "フッターの「日報」から作業中チケットをまとめてコピーできます。" },
+  "helpJiraTitle": { "message": "Jira との連携" },
+  "helpDefaultUrlLabel": { "message": "連携されるデフォルト URL" },
+  "helpDefaultUrlDesc": { "message": "設定なしの場合、以下の atlassian.net URL パターンで自動連携が有効です。" },
+  "helpDefaultUrlNote": { "message": "チケット番号が URL に含まれないページ（ダッシュボードなど）を開いても何も起きません。" },
+  "helpPageOpenLabel": { "message": "ページを開いたときの動作" },
+  "helpPageOpenDesc": { "message": "対象 URL のページを開くと自動で次の処理が実行されます：" },
+  "helpPageOpenStep1": { "message": "URL からチケット番号を検出" },
+  "helpPageOpenStep2": { "message": "ページタイトルを取得（SPA のため最大 3 秒リトライ）" },
+  "helpPageOpenStep3": { "message": "「履歴」に自動記録（最新 20 件）" },
+  "helpPageOpenStep4": { "message": "画面に「保存」バッジを表示" },
+  "helpPageOpenNote": { "message": "Jira 内のページ遷移（リロードなし）にも追従します。" },
+  "helpBadgeLabel": { "message": "「保存」バッジ" },
+  "helpBadgeDesc": { "message": "Jira ページ内に表示されるバッジをクリックすると、チケットリストに手動追加できます。「履歴」への記録はバッジを押さなくても自動で行われます。" },
+  "helpSettingsTitle": { "message": "設定" },
+  "helpCustomJiraLabel": { "message": "自社 Jira の URL 設定" },
+  "helpCustomJiraDesc": { "message": "社内ホスティングの Jira を使う場合はベース URL を設定します。" },
+  "helpCustomJiraExamples": { "message": "設定例と連携される範囲：" },
+  "helpCustomJiraNote": { "message": "設定を保存した直後から有効になります（再起動不要）。ただし設定時点で既に開いているタブは対象外で、次回開いたときから有効です。" },
+  "helpGitPrefixLabel": { "message": "Git プレフィックス" },
+  "helpGitPrefixDesc": { "message": "ブランチ名やコミットメッセージのデフォルトプレフィックスを設定します（例: feat）。コピーテンプレートの {prefix} トークンで使用されます。" },
+  "helpTemplateLabel": { "message": "コピーテンプレート" },
+  "helpTemplateDesc": { "message": "{number} {title} {slug} {prefix} {date} などのトークンを組み合わせて独自のコピー形式を定義できます。" }
+}

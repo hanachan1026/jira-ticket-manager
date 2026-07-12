@@ -12,6 +12,7 @@ import {
   GitBranchIcon,
   ZapIcon,
 } from "lucide-react";
+import { t } from "../utils/i18n";
 
 interface Props {
   onClose: () => void;
@@ -60,7 +61,7 @@ function UrlPattern({ pattern }: { pattern: string }) {
 export function HelpPanel({ onClose }: Props) {
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* ヘッダー */}
+      {/* Header */}
       <div className="px-3 pt-3 pb-2 border-b border-gray-100 flex items-center gap-1.5">
         <button
           onClick={onClose}
@@ -69,67 +70,71 @@ export function HelpPanel({ onClose }: Props) {
           <ChevronLeftIcon size={16} />
         </button>
         <HelpCircleIcon size={13} className="text-gray-500" />
-        <span className="text-sm font-medium text-gray-700">使い方</span>
+        <span className="text-sm font-medium text-gray-700">{t("helpTitle")}</span>
       </div>
 
-      {/* コンテンツ */}
+      {/* Content */}
       <div className="flex-1 overflow-y-auto px-3 py-3 text-xs">
 
-        <Section title="基本操作" icon={<PlusIcon size={13} />}>
-          <Item icon={<PlusIcon size={12} />} label="チケットを追加">
-            右上の「追加」ボタンからチケット番号（例: <Code>PROJ-123</Code>）とタイトルを入力して保存します。
+        <Section title={t("helpBasicsTitle")} icon={<PlusIcon size={13} />}>
+          <Item icon={<PlusIcon size={12} />} label={t("helpAddLabel")}>
+            {t("helpAddDesc")}
           </Item>
-          <Item icon={<CopyIcon size={12} />} label="コピー">
-            チケットカード下部の Branch / Commit / Number ボタンで各フォーマットをクリップボードにコピーします。
+          <Item icon={<CopyIcon size={12} />} label={t("helpCopyLabel")}>
+            {t("helpCopyDesc")}
           </Item>
-          <Item icon={<StarIcon size={12} />} label="作業中（WIP）マーク">
-            ★ボタンで作業中フラグを付けられます。フッターの「作業中」フィルタで絞り込み可能です。
+          <Item icon={<StarIcon size={12} />} label={t("helpWipLabel")}>
+            {t("helpWipDesc")}
           </Item>
-          <Item icon={<ClipboardListIcon size={12} />} label="日報コピー">
-            フッターの「日報」から作業中チケットをまとめてコピーできます。
+          <Item icon={<ClipboardListIcon size={12} />} label={t("helpDailyLabel")}>
+            {t("helpDailyDesc")}
           </Item>
         </Section>
 
-        <Section title="Jira との連携" icon={<GlobeIcon size={13} />}>
-          <Item icon={<ZapIcon size={12} />} label="連携されるデフォルト URL">
-            <p>設定なしの場合、以下の atlassian.net URL パターンで自動連携が有効です。</p>
+        <Section title={t("helpJiraTitle")} icon={<GlobeIcon size={13} />}>
+          <Item icon={<ZapIcon size={12} />} label={t("helpDefaultUrlLabel")}>
+            <p>{t("helpDefaultUrlDesc")}</p>
             <UrlPattern pattern="*.atlassian.net/browse/PROJ-123" />
             <UrlPattern pattern="*.atlassian.net/issues/PROJ-123" />
             <UrlPattern pattern="*.atlassian.net/jira/...?selectedIssue=PROJ-123" />
-            <p className="mt-1 text-gray-400">チケット番号が URL に含まれないページ（ダッシュボードなど）を開いても何も起きません。</p>
+            <p className="mt-1 text-gray-400">{t("helpDefaultUrlNote")}</p>
           </Item>
 
-          <Item icon={<ClockIcon size={12} />} label="ページを開いたときの動作">
-            <p>対象 URL のページを開くと自動で次の処理が実行されます：</p>
+          <Item icon={<ClockIcon size={12} />} label={t("helpPageOpenLabel")}>
+            <p>{t("helpPageOpenDesc")}</p>
             <ol className="mt-1 space-y-0.5 list-decimal list-inside text-gray-500">
-              <li>URL からチケット番号を検出</li>
-              <li>ページタイトルを取得（SPA のため最大 3 秒リトライ）</li>
-              <li>「履歴」に自動記録（最新 20 件）</li>
-              <li>画面に「保存」バッジを表示</li>
+              <li>{t("helpPageOpenStep1")}</li>
+              <li>{t("helpPageOpenStep2")}</li>
+              <li>{t("helpPageOpenStep3")}</li>
+              <li>{t("helpPageOpenStep4")}</li>
             </ol>
-            <p className="mt-1">Jira 内のページ遷移（リロードなし）にも追従します。</p>
+            <p className="mt-1">{t("helpPageOpenNote")}</p>
           </Item>
 
-          <Item icon={<PlusIcon size={12} />} label="「保存」バッジ">
-            Jira ページ内に表示されるバッジをクリックすると、チケットリストに手動追加できます。「履歴」への記録はバッジを押さなくても自動で行われます。
+          <Item icon={<PlusIcon size={12} />} label={t("helpBadgeLabel")}>
+            {t("helpBadgeDesc")}
           </Item>
         </Section>
 
-        <Section title="設定" icon={<SettingsIcon size={13} />}>
-          <Item icon={<GlobeIcon size={12} />} label="自社 Jira の URL 設定">
-            <p>社内ホスティングの Jira を使う場合はベース URL を設定します。</p>
-            <p className="mt-1">設定例と連携される範囲：</p>
+        <Section title={t("helpSettingsTitle")} icon={<SettingsIcon size={13} />}>
+          <Item icon={<GlobeIcon size={12} />} label={t("helpCustomJiraLabel")}>
+            <p>{t("helpCustomJiraDesc")}</p>
+            <p className="mt-1">{t("helpCustomJiraExamples")}</p>
             <UrlPattern pattern="https://jira.mycompany.com → jira.mycompany.com/* すべて" />
             <UrlPattern pattern="https://mycompany.com/jira → mycompany.com/jira/* 以下" />
-            <p className="mt-1">設定を保存した直後から有効になります（再起動不要）。ただし設定時点で既に開いているタブは対象外で、次回開いたときから有効です。</p>
+            <p className="mt-1">{t("helpCustomJiraNote")}</p>
           </Item>
 
-          <Item icon={<GitBranchIcon size={12} />} label="Git プレフィックス">
-            ブランチ名やコミットメッセージのデフォルトプレフィックスを設定します（例: <Code>feat</Code>）。コピーテンプレートの <Code>{"{prefix}"}</Code> トークンで使用されます。
+          <Item icon={<GitBranchIcon size={12} />} label={t("helpGitPrefixLabel")}>
+            {t("helpGitPrefixDesc").split("{prefix}").map((part, i) =>
+              i === 0 ? part : <React.Fragment key={i}><Code>{"{prefix}"}</Code>{part}</React.Fragment>
+            )}
           </Item>
 
-          <Item icon={<CopyIcon size={12} />} label="コピーテンプレート">
-            <Code>{"{number}"}</Code> <Code>{"{title}"}</Code> <Code>{"{slug}"}</Code> <Code>{"{prefix}"}</Code> <Code>{"{date}"}</Code> などのトークンを組み合わせて独自のコピー形式を定義できます。
+          <Item icon={<CopyIcon size={12} />} label={t("helpTemplateLabel")}>
+            {t("helpTemplateDesc").split(/(\{[^}]+\})/).map((part, i) =>
+              /^\{[^}]+\}$/.test(part) ? <Code key={i}>{part}</Code> : part
+            )}
           </Item>
         </Section>
 

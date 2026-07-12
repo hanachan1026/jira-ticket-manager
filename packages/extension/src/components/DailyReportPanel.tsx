@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { ClipboardIcon, CheckIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { buildDailyReport } from "../utils/formatTemplate";
+import { t } from "../utils/i18n";
 import type { JiraTicket, CopyTemplate, UserSettings } from "../types";
 
 interface DailyReportPanelProps {
@@ -24,9 +25,9 @@ export function DailyReportPanel({
   const [copied, setCopied] = useState(false);
 
   const lineTemplate =
-    templates.find((t) => t.id === lineTemplateId) ?? templates[0];
+    templates.find((tmpl) => tmpl.id === lineTemplateId) ?? templates[0];
 
-  const selectedTickets = tickets.filter((t) => selectedIds.includes(t.id));
+  const selectedTickets = tickets.filter((ticket) => selectedIds.includes(ticket.id));
   const preview = lineTemplate ? buildDailyReport(selectedTickets, lineTemplate, settings) : "";
 
   const toggle = useCallback((id: string) => {
@@ -53,24 +54,24 @@ export function DailyReportPanel({
 
   return (
     <div className="flex flex-col h-full">
-      {/* ヘッダー */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-gray-800">📋 日報コピー</h2>
+        <h2 className="text-sm font-semibold text-gray-800">{t("dailyHeader")}</h2>
         <Button variant="ghost" size="sm" onClick={onClose}>
           ✕
         </Button>
       </div>
 
-      {/* テンプレート選択 */}
+      {/* Template selector */}
       <div className="mb-3">
-        <label className="text-xs font-medium text-gray-600 mb-1 block">フォーマット</label>
+        <label className="text-xs font-medium text-gray-600 mb-1 block">{t("dailyFormat")}</label>
         <select
           value={lineTemplateId}
           onChange={(e) => setLineTemplateId(e.target.value)}
           className="w-full text-xs border border-gray-300 rounded px-2 py-1.5 text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
-          {templates.map((t) => (
-            <option key={t.id} value={t.id}>{t.name}</option>
+          {templates.map((tmpl) => (
+            <option key={tmpl.id} value={tmpl.id}>{tmpl.name}</option>
           ))}
         </select>
         {lineTemplate && (
@@ -78,10 +79,10 @@ export function DailyReportPanel({
         )}
       </div>
 
-      {/* チケット選択リスト */}
+      {/* Ticket selection list */}
       <div className="flex-1 overflow-y-auto space-y-1 mb-3 min-h-0">
         {tickets.length === 0 ? (
-          <p className="text-xs text-gray-400 text-center py-4">チケットがありません</p>
+          <p className="text-xs text-gray-400 text-center py-4">{t("dailyNoTickets")}</p>
         ) : (
           tickets.map((ticket) => (
             <label
@@ -105,17 +106,17 @@ export function DailyReportPanel({
         )}
       </div>
 
-      {/* プレビュー */}
+      {/* Preview */}
       {preview && (
         <div className="mb-3">
-          <p className="text-xs font-medium text-gray-600 mb-1">プレビュー</p>
+          <p className="text-xs font-medium text-gray-600 mb-1">{t("preview")}</p>
           <pre className="text-xs bg-gray-50 border border-gray-200 rounded p-2 whitespace-pre-wrap text-gray-700 max-h-24 overflow-y-auto">
             {preview}
           </pre>
         </div>
       )}
 
-      {/* コピーボタン */}
+      {/* Copy button */}
       <Button
         variant="primary"
         onClick={handleCopy}
@@ -125,12 +126,12 @@ export function DailyReportPanel({
         {copied ? (
           <>
             <CheckIcon size={14} className="mr-1.5" />
-            コピーしました
+            {t("dailyCopied")}
           </>
         ) : (
           <>
             <ClipboardIcon size={14} className="mr-1.5" />
-            {selectedTickets.length}件をコピー
+            {t("dailyCopyCount", [String(selectedTickets.length)])}
           </>
         )}
       </Button>

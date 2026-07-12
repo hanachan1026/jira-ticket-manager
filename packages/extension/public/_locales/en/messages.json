@@ -1,0 +1,152 @@
+{
+  "extensionName": { "message": "Jira Ticket Manager" },
+  "extensionDescription": { "message": "Save Jira ticket info and copy it instantly — branch names, commit prefixes, daily reports." },
+
+  "loading": { "message": "Loading..." },
+  "cancel": { "message": "Cancel" },
+  "save": { "message": "Save" },
+  "saving": { "message": "Saving..." },
+  "add": { "message": "Add" },
+  "edit": { "message": "Edit" },
+  "delete": { "message": "Delete" },
+  "settings": { "message": "Settings" },
+  "grantPermission": { "message": "Grant permission" },
+  "copyTicketNumber": { "message": "Copy ticket number" },
+  "openInJira": { "message": "Open in Jira" },
+
+  "listSearchPlaceholder": { "message": "Search by number or title..." },
+  "listHelpTooltip": { "message": "How to use" },
+  "listAddTooltip": { "message": "Add ticket" },
+  "listWipFilter": { "message": "In progress" },
+  "listNoResults": { "message": "No tickets found" },
+  "listEmpty": { "message": "No tickets yet" },
+  "listAddFirst": { "message": "Add your first ticket" },
+  "listRecentlyViewed": { "message": "Recently viewed" },
+  "listSeeAll": { "message": "See all" },
+  "listSaveAsWip": { "message": "Save and set as in progress" },
+  "listTicketCount": {
+    "message": "$count$ tickets",
+    "placeholders": { "count": { "content": "$1", "example": "5" } }
+  },
+  "listHistory": { "message": "History" },
+  "listDailyReport": { "message": "Daily report" },
+  "listCopied": {
+    "message": "Copied: $text$",
+    "placeholders": { "text": { "content": "$1", "example": "feat/PROJ-123" } }
+  },
+
+  "cardSetWip": { "message": "Set as WIP" },
+  "cardUnsetWip": { "message": "Remove WIP" },
+  "cardConfirmDelete": { "message": "Click again to delete" },
+
+  "formEditTitle": { "message": "Edit ticket" },
+  "formAddTitle": { "message": "Add ticket" },
+  "formNumberLabel": { "message": "Ticket number *" },
+  "formNumberRequired": { "message": "Ticket number is required" },
+  "formNumberFormat": { "message": "Use format: PROJ-123" },
+  "formTitleLabel": { "message": "Title *" },
+  "formTitleRequired": { "message": "Title is required" },
+  "formNoteLabel": { "message": "Note (optional)" },
+  "formNotePlaceholder": { "message": "Additional details..." },
+  "formJiraUrlLabel": { "message": "Jira URL (optional)" },
+
+  "dailyHeader": { "message": "Daily report" },
+  "dailyFormat": { "message": "Format" },
+  "dailyNoTickets": { "message": "No tickets" },
+  "dailyCopied": { "message": "Copied!" },
+  "dailyCopyCount": {
+    "message": "Copy $count$ items",
+    "placeholders": { "count": { "content": "$1", "example": "3" } }
+  },
+
+  "settingsTitle": { "message": "Settings" },
+  "settingsStorage": { "message": "Data storage" },
+  "settingsChromeSyncDesc": { "message": "Sync across devices" },
+  "settingsLocal": { "message": "Local" },
+  "settingsLocalDesc": { "message": "This browser only" },
+  "settingsLocalFile": { "message": "Local file" },
+  "settingsLocalFileDesc": { "message": "Save to JSON file" },
+  "settingsMigrating": { "message": "Migrating..." },
+  "settingsMigrateBtn": { "message": "Migrate current data to file" },
+  "settingsFileEnabled": { "message": "File storage enabled" },
+  "settingsFileCancelled": { "message": "File selection was cancelled" },
+  "settingsMigrationFailed": { "message": "Migration failed" },
+  "settingsPermissionDenied": { "message": "Permission was not granted" },
+  "settingsGitPrefix": { "message": "Default Git prefix" },
+  "settingsJiraUrl": { "message": "Jira base URL (optional)" },
+  "settingsJiraUrlHint": { "message": "Used for automatic ticket detection via content script" },
+  "settingsCustomDomainGranted": { "message": "Access to custom domain is granted" },
+  "settingsCustomDomainRequired": { "message": "Permission required for this domain" },
+  "settingsTemplates": { "message": "Copy templates" },
+  "settingsAddTemplate": { "message": "Add template" },
+  "settingsTemplateNamePlaceholder": { "message": "Name (e.g., Slack mention)" },
+  "settingsTemplatePatternPlaceholder": { "message": "Pattern (e.g., <{number}|{title}>)" },
+  "settingsTokensHint": { "message": "Available tokens: {number} {title} {slug} {prefix} {date}" },
+  "settingsConfigure": { "message": "Configure" },
+
+  "recentTitle": { "message": "Recently viewed tickets" },
+  "recentConfirmClear": { "message": "Really clear?" },
+  "recentClear": { "message": "Clear" },
+  "recentEmpty": { "message": "Opens automatically when you visit Jira pages" },
+  "recentJustNow": { "message": "Just now" },
+  "recentMinAgo": {
+    "message": "$count$ min ago",
+    "placeholders": { "count": { "content": "$1", "example": "5" } }
+  },
+  "recentHrAgo": {
+    "message": "$count$ hr ago",
+    "placeholders": { "count": { "content": "$1", "example": "2" } }
+  },
+  "recentDaysAgo": {
+    "message": "$count$ days ago",
+    "placeholders": { "count": { "content": "$1", "example": "3" } }
+  },
+
+  "badgeIdle": {
+    "message": "Save $number$",
+    "placeholders": { "number": { "content": "$1", "example": "PROJ-123" } }
+  },
+  "badgeSaving": { "message": "Saving..." },
+  "badgeSaveBtn": { "message": "Save" },
+  "badgeSaved": {
+    "message": "Saved $number$",
+    "placeholders": { "number": { "content": "$1", "example": "PROJ-123" } }
+  },
+  "badgeDuplicate": {
+    "message": "$number$ already saved",
+    "placeholders": { "number": { "content": "$1", "example": "PROJ-123" } }
+  },
+
+  "helpTitle": { "message": "How to use" },
+  "helpBasicsTitle": { "message": "Basic operations" },
+  "helpAddLabel": { "message": "Add ticket" },
+  "helpAddDesc": { "message": "Click the 'Add' button at top right, enter a ticket number (e.g., PROJ-123) and a title, then save." },
+  "helpCopyLabel": { "message": "Copy" },
+  "helpCopyDesc": { "message": "Use the Branch / Commit / Number buttons at the bottom of each ticket card to copy to clipboard." },
+  "helpWipLabel": { "message": "In-progress (WIP) mark" },
+  "helpWipDesc": { "message": "Use the ★ button to mark a ticket as in progress. Filter by in-progress using the footer filter." },
+  "helpDailyLabel": { "message": "Daily report" },
+  "helpDailyDesc": { "message": "Copy all in-progress tickets at once from 'Daily report' in the footer." },
+  "helpJiraTitle": { "message": "Jira integration" },
+  "helpDefaultUrlLabel": { "message": "Default URLs for integration" },
+  "helpDefaultUrlDesc": { "message": "Without any configuration, auto-integration is active for these atlassian.net URL patterns." },
+  "helpDefaultUrlNote": { "message": "Pages without a ticket number in the URL (dashboards, etc.) will not trigger anything." },
+  "helpPageOpenLabel": { "message": "When a page is opened" },
+  "helpPageOpenDesc": { "message": "When you open a matching URL, the following happens automatically:" },
+  "helpPageOpenStep1": { "message": "Detect ticket number from URL" },
+  "helpPageOpenStep2": { "message": "Get page title (retries up to 3s for SPAs)" },
+  "helpPageOpenStep3": { "message": "Auto-record to 'History' (latest 20)" },
+  "helpPageOpenStep4": { "message": "Display 'Save' badge on screen" },
+  "helpPageOpenNote": { "message": "Also works with in-page navigation in Jira (no full reload)." },
+  "helpBadgeLabel": { "message": "'Save' badge" },
+  "helpBadgeDesc": { "message": "Click the badge on Jira pages to manually add a ticket. History is recorded automatically without pressing the badge." },
+  "helpSettingsTitle": { "message": "Settings" },
+  "helpCustomJiraLabel": { "message": "Custom Jira URL" },
+  "helpCustomJiraDesc": { "message": "Set the base URL if you use a self-hosted Jira." },
+  "helpCustomJiraExamples": { "message": "Configuration examples and scope:" },
+  "helpCustomJiraNote": { "message": "Takes effect immediately after saving. Tabs already open are not affected until next load." },
+  "helpGitPrefixLabel": { "message": "Git prefix" },
+  "helpGitPrefixDesc": { "message": "Set the default prefix for branch names and commit messages (e.g., feat). Used with the {prefix} token in copy templates." },
+  "helpTemplateLabel": { "message": "Copy templates" },
+  "helpTemplateDesc": { "message": "Combine tokens like {number}, {title}, {slug}, {prefix}, {date} to define custom copy formats." }
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Input } from "./ui/Input";
 import { Textarea } from "./ui/Textarea";
 import { Button } from "./ui/Button";
+import { t } from "../utils/i18n";
 import type { JiraTicket } from "../types";
 
 interface TicketFormProps {
@@ -20,10 +21,10 @@ export function TicketForm({ initialData, onSave, onCancel }: TicketFormProps) {
 
   const validate = (): boolean => {
     const errs: Record<string, string> = {};
-    if (!number.trim()) errs.number = "チケット番号は必須です";
+    if (!number.trim()) errs.number = t("formNumberRequired");
     else if (!/^[A-Za-z]+-\d+$/.test(number.trim()))
-      errs.number = "例: PROJ-123 の形式で入力してください";
-    if (!title.trim()) errs.title = "タイトルは必須です";
+      errs.number = t("formNumberFormat");
+    if (!title.trim()) errs.title = t("formTitleRequired");
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -53,33 +54,33 @@ export function TicketForm({ initialData, onSave, onCancel }: TicketFormProps) {
   return (
     <div className="flex flex-col gap-3" onKeyDown={handleKeyDown}>
       <h2 className="text-sm font-semibold text-gray-800">
-        {initialData?.id ? "チケットを編集" : "チケットを追加"}
+        {initialData?.id ? t("formEditTitle") : t("formAddTitle")}
       </h2>
 
       <Input
-        label="チケット番号 *"
-        placeholder="例: PROJ-123"
+        label={t("formNumberLabel")}
+        placeholder="PROJ-123"
         value={number}
         onChange={(e) => setNumber(e.target.value.toUpperCase())}
         error={errors.number}
         autoFocus
       />
       <Input
-        label="タイトル *"
-        placeholder="例: Fix login bug"
+        label={t("formTitleLabel")}
+        placeholder="Fix login bug"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         error={errors.title}
       />
       <Textarea
-        label="メモ (任意)"
-        placeholder="作業内容の補足など..."
+        label={t("formNoteLabel")}
+        placeholder={t("formNotePlaceholder")}
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
         rows={3}
       />
       <Input
-        label="Jira URL (任意)"
+        label={t("formJiraUrlLabel")}
         placeholder="https://yourteam.atlassian.net/browse/PROJ-123"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
@@ -88,10 +89,10 @@ export function TicketForm({ initialData, onSave, onCancel }: TicketFormProps) {
 
       <div className="flex gap-2 justify-end pt-1">
         <Button variant="ghost" size="sm" onClick={onCancel} disabled={saving}>
-          キャンセル
+          {t("cancel")}
         </Button>
         <Button variant="primary" size="sm" onClick={handleSave} disabled={saving}>
-          {saving ? "保存中..." : "保存"}
+          {saving ? t("saving") : t("save")}
         </Button>
       </div>
     </div>

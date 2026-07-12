@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { GitBranchIcon, MessageSquareIcon, HashIcon, StarIcon, PencilIcon, TrashIcon, CheckIcon, ExternalLinkIcon } from "lucide-react";
+import { GitBranchIcon, MessageSquareIcon, HashIcon, StarIcon, PencilIcon, TrashIcon, CheckIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { applyTemplate } from "../utils/formatTemplate";
+import { t } from "../utils/i18n";
 import type { JiraTicket, CopyTemplate, UserSettings } from "../types";
 
 interface TicketCardProps {
@@ -91,19 +92,19 @@ export function TicketCard({
             variant="ghost"
             size="icon"
             onClick={onToggleInProgress}
-            title={isInProgress ? "WIPを解除" : "WIPにセット"}
+            title={isInProgress ? t("cardUnsetWip") : t("cardSetWip")}
             className={isInProgress ? "text-yellow-500 hover:text-yellow-600" : ""}
           >
             <StarIcon size={13} fill={isInProgress ? "currentColor" : "none"} />
           </Button>
-          <Button variant="ghost" size="icon" onClick={onEdit} title="編集">
+          <Button variant="ghost" size="icon" onClick={onEdit} title={t("edit")}>
             <PencilIcon size={13} />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleDelete}
-            title={confirmDelete ? "もう一度クリックで削除" : "削除"}
+            title={confirmDelete ? t("cardConfirmDelete") : t("delete")}
             className={confirmDelete ? "text-red-500 hover:text-red-600" : ""}
           >
             <TrashIcon size={13} />

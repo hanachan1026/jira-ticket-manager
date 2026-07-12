@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BookmarkPlusIcon, CheckIcon, XIcon } from "lucide-react";
+import { t } from "../utils/i18n";
 import type { ExtensionMessage } from "../types";
 
 interface SaveBadgeProps {
@@ -34,7 +35,7 @@ export function SaveBadge({ number, title, url }: SaveBadgeProps) {
         setState("duplicate");
       }
     } catch {
-      setState("saved"); // background が起きていない場合も UI はフィードバック
+      setState("saved");
     }
   };
 
@@ -59,12 +60,12 @@ export function SaveBadge({ number, title, url }: SaveBadgeProps) {
         }}
       >
         <CheckIcon size={13} />
-        {state === "saved" ? `${number} を保存しました` : `${number} は既に保存済みです`}
+        {state === "saved" ? t("badgeSaved", [number]) : t("badgeDuplicate", [number])}
       </div>
     );
   }
 
-  if (state === "expanded") {
+  if (state === "expanded" || state === "saving") {
     return (
       <div
         style={{
@@ -119,13 +120,13 @@ export function SaveBadge({ number, title, url }: SaveBadgeProps) {
             cursor: "pointer",
           }}
         >
-          {state === "saving" ? "保存中..." : "保存する"}
+          {state === "saving" ? t("badgeSaving") : t("badgeSaveBtn")}
         </button>
       </div>
     );
   }
 
-  // idle: フローティングピル表示
+  // idle: floating pill
   return (
     <button
       onClick={() => setState("expanded")}
@@ -153,7 +154,7 @@ export function SaveBadge({ number, title, url }: SaveBadgeProps) {
       onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = "scale(1)")}
     >
       <BookmarkPlusIcon size={14} />
-      {number} を保存
+      {t("badgeIdle", [number])}
     </button>
   );
 }

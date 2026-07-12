@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PlusIcon, TrashIcon, CloudIcon, HardDriveIcon, FileIcon, AlertTriangleIcon, CheckCircleIcon, KeyIcon } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
+import { t } from "../utils/i18n";
 import type { UserSettings, CopyTemplate } from "../types";
 
 const GIT_PREFIXES = ["feat", "fix", "chore", "refactor", "docs", "test"] as const;
@@ -13,7 +14,6 @@ interface SettingsPanelProps {
   onAddTemplate: (data: Omit<CopyTemplate, "id">) => Promise<void>;
   onRemoveTemplate: (id: string) => Promise<void>;
   onClose: () => void;
-  // ファイルストレージ関連
   storageMode: "chrome" | "file";
   enableFileStorage: () => Promise<boolean>;
   disableFileStorage: () => Promise<void>;
@@ -21,7 +21,6 @@ interface SettingsPanelProps {
   requestFilePermission: () => Promise<boolean>;
   isFileStorageAvailable: boolean;
   needsPermission: boolean;
-  // カスタムドメイン権限
   requestCustomDomainPermission?: () => Promise<boolean>;
   hasCustomDomainPermission?: boolean;
 }
@@ -67,7 +66,7 @@ export function SettingsPanel({
     setFileError(null);
     const success = await enableFileStorage();
     if (!success) {
-      setFileError("ファイルの選択がキャンセルされました");
+      setFileError(t("settingsFileCancelled"));
     }
   };
 
@@ -77,7 +76,7 @@ export function SettingsPanel({
     try {
       await migrateToFile();
     } catch {
-      setFileError("移行に失敗しました");
+      setFileError(t("settingsMigrationFailed"));
     }
     setMigrating(false);
   };
@@ -86,23 +85,23 @@ export function SettingsPanel({
     setFileError(null);
     const granted = await requestFilePermission();
     if (!granted) {
-      setFileError("権限が付与されませんでした");
+      setFileError(t("settingsPermissionDenied"));
     }
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {/* ヘッダー */}
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-gray-800">設定</h2>
+        <h2 className="text-sm font-semibold text-gray-800">{t("settingsTitle")}</h2>
         <Button variant="ghost" size="sm" onClick={onClose}>
           ✕
         </Button>
       </div>
 
-      {/* データ保存先 */}
+      {/* Data storage */}
       <div>
-        <p className="text-xs font-medium text-gray-600 mb-2">データ保存先</p>
+        <p className="text-xs font-medium text-gray-600 mb-2">{t("settingsStorage")}</p>
         <div className="space-y-1.5">
           {/* Chrome Sync */}
           <button
@@ -122,14 +121,14 @@ export function SettingsPanel({
             <CloudIcon size={14} className={settings.storageArea === "sync" && storageMode !== "file" ? "text-blue-600" : "text-gray-400"} />
             <div className="flex-1">
               <p className="text-xs font-medium">Chrome Sync</p>
-              <p className="text-xs text-gray-400">デバイス間で同期</p>
+              <p className="text-xs text-gray-400">{t("settingsChromeSyncDesc")}</p>
             </div>
             {settings.storageArea === "sync" && storageMode !== "file" && (
               <CheckCircleIcon size={14} className="text-blue-600" />
             )}
           </button>
 
-          {/* ローカル */}
+          {/* Local */}
           <button
             onClick={() => {
               if (storageMode === "file") {
@@ -145,15 +144,15 @@ export function SettingsPanel({
           >
             <HardDriveIcon size={14} className={settings.storageArea === "local" && storageMode !== "file" ? "text-blue-600" : "text-gray-400"} />
             <div className="flex-1">
-              <p className="text-xs font-medium">ローカル</p>
-              <p className="text-xs text-gray-400">このブラウザのみ</p>
+              <p className="text-xs font-medium">{t("settingsLocal")}</p>
+              <p className="text-xs text-gray-400">{t("settingsLocalDesc")}</p>
             </div>
             {settings.storageArea === "local" && storageMode !== "file" && (
               <CheckCircleIcon size={14} className="text-blue-600" />
             )}
           </button>
 
-          {/* ローカルファイル */}
+          {/* Local file */}
           {isFileStorageAvailable && (
             <div
               className={`w-full p-2 rounded border ${
@@ -163,15 +162,15 @@ export function SettingsPanel({
               <div className="flex items-center gap-2">
                 <FileIcon size={14} className={storageMode === "file" ? "text-blue-600" : "text-gray-400"} />
                 <div className="flex-1">
-                  <p className="text-xs font-medium">ローカルファイル</p>
-                  <p className="text-xs text-gray-400">JSONファイルに保存</p>
+                  <p className="text-xs font-medium">{t("settingsLocalFile")}</p>
+                  <p className="text-xs text-gray-400">{t("settingsLocalFileDesc")}</p>
                 </div>
                 {storageMode === "file" ? (
                   <div className="flex items-center gap-1">
                     {needsPermission ? (
                       <Button variant="secondary" size="sm" onClick={handleRequestPermission}>
                         <KeyIcon size={10} className="mr-1" />
-                        権限を付与
+                        {t("grantPermission")}
                       </Button>
                     ) : (
                       <CheckCircleIcon size={14} className="text-green-600" />
@@ -179,7 +178,7 @@ export function SettingsPanel({
                   </div>
                 ) : (
                   <Button variant="secondary" size="sm" onClick={handleEnableFileStorage}>
-                    設定
+                    {t("settingsConfigure")}
                   </Button>
                 )}
               </div>
@@ -192,14 +191,14 @@ export function SettingsPanel({
                   disabled={migrating}
                   className="w-full mt-2 text-xs"
                 >
-                  {migrating ? "移行中..." : "現在のデータをファイルに移行"}
+                  {migrating ? t("settingsMigrating") : t("settingsMigrateBtn")}
                 </Button>
               )}
 
               {storageMode === "file" && !needsPermission && (
                 <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
                   <CheckCircleIcon size={10} />
-                  ファイルストレージ有効
+                  {t("settingsFileEnabled")}
                 </p>
               )}
 
@@ -214,9 +213,9 @@ export function SettingsPanel({
         </div>
       </div>
 
-      {/* Git プレフィックス */}
+      {/* Git prefix */}
       <div>
-        <p className="text-xs font-medium text-gray-600 mb-2">デフォルト Git プレフィックス</p>
+        <p className="text-xs font-medium text-gray-600 mb-2">{t("settingsGitPrefix")}</p>
         <div className="flex gap-1.5 flex-wrap">
           {GIT_PREFIXES.map((p) => (
             <button
@@ -234,29 +233,29 @@ export function SettingsPanel({
         </div>
       </div>
 
-      {/* Jira ベース URL */}
+      {/* Jira base URL */}
       <div>
         <Input
-          label="Jira ベース URL (任意)"
+          label={t("settingsJiraUrl")}
           placeholder="https://yourteam.atlassian.net"
           value={settings.jiraBaseUrl ?? ""}
           onChange={(e) => onUpdateSettings({ jiraBaseUrl: e.target.value || undefined })}
         />
         <p className="text-xs text-gray-400 mt-1">
-          ※ コンテンツスクリプトによるチケット自動検出に使用します
+          {t("settingsJiraUrlHint")}
         </p>
         {isCustomDomain(settings.jiraBaseUrl) && (
           hasCustomDomainPermission ? (
             <p className="text-xs text-green-600 flex items-center gap-1 mt-1.5">
-              <CheckCircleIcon size={10} /> カスタムドメインへのアクセスが許可されています
+              <CheckCircleIcon size={10} /> {t("settingsCustomDomainGranted")}
             </p>
           ) : (
             <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
               <AlertTriangleIcon size={10} className="text-amber-500" />
-              <span className="text-xs text-amber-600">このドメインへのアクセス権限が必要です</span>
+              <span className="text-xs text-amber-600">{t("settingsCustomDomainRequired")}</span>
               {requestCustomDomainPermission && (
                 <Button variant="secondary" size="sm" onClick={requestCustomDomainPermission}>
-                  <KeyIcon size={10} className="mr-1" />権限を付与
+                  <KeyIcon size={10} className="mr-1" />{t("grantPermission")}
                 </Button>
               )}
             </div>
@@ -264,24 +263,24 @@ export function SettingsPanel({
         )}
       </div>
 
-      {/* コピーテンプレート管理 */}
+      {/* Copy templates */}
       <div>
-        <p className="text-xs font-medium text-gray-600 mb-2">コピーテンプレート</p>
+        <p className="text-xs font-medium text-gray-600 mb-2">{t("settingsTemplates")}</p>
         <div className="space-y-1.5 mb-2 max-h-40 overflow-y-auto">
-          {templates.map((t) => (
+          {templates.map((tmpl) => (
             <div
-              key={t.id}
+              key={tmpl.id}
               className="flex items-center gap-2 bg-gray-50 rounded px-2.5 py-1.5"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-700">{t.name}</p>
-                <p className="text-xs font-mono text-gray-400 truncate">{t.pattern}</p>
+                <p className="text-xs font-medium text-gray-700">{tmpl.name}</p>
+                <p className="text-xs font-mono text-gray-400 truncate">{tmpl.pattern}</p>
               </div>
-              {!["branch", "commit", "number", "full", "daily"].includes(t.id) && (
+              {!["branch", "commit", "number", "full", "daily"].includes(tmpl.id) && (
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onRemoveTemplate(t.id)}
+                  onClick={() => onRemoveTemplate(tmpl.id)}
                   className="shrink-0 text-gray-400 hover:text-red-500"
                 >
                   <TrashIcon size={12} />
@@ -291,22 +290,22 @@ export function SettingsPanel({
           ))}
         </div>
 
-        {/* 新規テンプレート追加 */}
+        {/* Add template */}
         <div className="border border-dashed border-gray-300 rounded p-2 space-y-1.5">
-          <p className="text-xs text-gray-500">テンプレート追加</p>
+          <p className="text-xs text-gray-500">{t("settingsAddTemplate")}</p>
           <Input
-            placeholder="名前 (例: Slack mention)"
+            placeholder={t("settingsTemplateNamePlaceholder")}
             value={newTmplName}
             onChange={(e) => setNewTmplName(e.target.value)}
           />
           <Input
-            placeholder="パターン (例: <{number}|{title}>)"
+            placeholder={t("settingsTemplatePatternPlaceholder")}
             value={newTmplPattern}
             onChange={(e) => setNewTmplPattern(e.target.value)}
             className="font-mono"
           />
           <p className="text-xs text-gray-400">
-            使えるトークン: {"{number}"} {"{title}"} {"{slug}"} {"{prefix}"} {"{date}"}
+            {t("settingsTokensHint")}
           </p>
           <Button
             variant="secondary"
@@ -316,7 +315,7 @@ export function SettingsPanel({
             className="w-full"
           >
             <PlusIcon size={12} className="mr-1" />
-            追加
+            {t("add")}
           </Button>
         </div>
       </div>

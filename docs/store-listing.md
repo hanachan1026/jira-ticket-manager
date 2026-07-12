@@ -15,36 +15,52 @@ Save Jira ticket info and copy it instantly — branch names, commit prefixes, d
 ## 詳細説明
 
 ```
-Jira Ticket Manager is a Chrome extension for software developers who use Jira daily.
-The UI is available in English and Japanese (automatically selected based on your browser language).
+Jira Ticket Manager is a Chrome extension for developers who use Jira daily.
+The UI is available in English and Japanese (selected automatically based on your browser language).
 
 KEY FEATURES
 
-• Save tickets instantly — visit any Jira ticket page and click the floating "Save" badge to store the ticket number and title.
-• Copy in one click — format tickets as branch names (feat/PROJ-123-my-feature), commit messages, or custom patterns.
-• Daily report generator — select tickets and copy a formatted list for standup or daily reports.
-• Recently viewed — automatically tracks the last 20 Jira pages you visited.
-• WIP tracker — mark tickets as "in progress" and filter your list to today's work.
-• Custom templates — define your own copy format using tokens: {number}, {title}, {slug}, {prefix}, {date}.
-• Chrome Sync support — your saved tickets and settings sync across devices via your Google account.
+• Save tickets — A floating button appears on Jira ticket pages. One click saves the ticket number and title.
+• One-click copy — Instantly copy branch names (feat/PROJ-123-fix-login), commit prefixes, ticket numbers, and more.
+• Daily report generator — Check the tickets you worked on and copy a formatted report in one click.
+• Recently viewed — Automatically tracks the last 20 Jira pages you visited.
+• WIP tracker — Flag in-progress tickets and filter your list.
+• Custom templates — Define your own copy formats using {number}, {title}, {slug}, {prefix}, {date} tokens.
+• Chrome Sync — Syncs your saved tickets and settings across devices.
 
-SUPPORTED JIRA INSTANCES
+SUPPORTED JIRA
 
-• Atlassian Cloud (*.atlassian.net) — works out of the box.
-• Self-hosted / Jira Data Center — enter your Jira base URL in Settings; the extension will request host permission via Chrome's native dialog.
+• Atlassian Cloud (*.atlassian.net) — works right after install.
+• Self-hosted / Jira Data Center — enter your Jira URL in Settings and grant host permission via Chrome's native dialog.
 
 PRIVACY
 
-No data is sent to any external server. All ticket data is stored in Chrome Storage on your device (or synced via your own Google account). See the full privacy policy at: https://hanachan1026.github.io/jira-ticket-manager/privacy-policy
+All data is stored in Chrome storage on your device. Nothing is sent to external servers.
+Privacy policy: https://hanachan1026.github.io/jira-ticket-manager/privacy-policy
 
-HOW TO USE
+---
 
-1. Install the extension.
-2. Open your Jira instance and navigate to a ticket page.
-3. Click the blue floating badge ("Save") to save the ticket.
-4. Open the extension popup to copy, manage, or generate reports.
+Jira Ticket Manager は、Jira を日常的に使う開発者のための Chrome 拡張機能です。
+UI は英語・日本語に対応しています（ブラウザの言語設定に応じて自動切替）。
 
-For self-hosted Jira: open the extension popup → Settings → enter your Jira base URL → click "Grant permission".
+【主な機能】
+
+• チケット保存 — Jira のチケットページを開くと右下にフローティングボタンが表示され、ワンクリックで番号とタイトルを保存できます。
+• ワンクリックコピー — ブランチ名（feat/PROJ-123-fix-login）、コミットプレフィックス、チケット番号など、よく使うフォーマットをすぐコピーできます。
+• 日報ジェネレーター — 作業したチケットにチェックを入れるだけで、日報用テキストをまとめてコピーできます。
+• 最近見たチケット — Jira のページを開くと自動記録。保存前のチケットもすぐアクセスできます。
+• WIP トラッカー — 作業中のチケットにフラグを立て、リストをフィルタできます。
+• カスタムテンプレート — {number}・{title}・{slug}・{prefix}・{date} トークンで独自のコピー形式を登録できます。
+• Chrome Sync 対応 — 複数デバイス間でデータを同期します。
+
+【対応 Jira】
+
+• Atlassian Cloud（*.atlassian.net）— インストール後すぐ使えます。
+• オンプレミス / Jira Data Center — 設定画面で Jira の URL を入力し、権限を付与するだけで対応できます。
+
+【データについて】
+
+すべてのデータはデバイス上の Chrome ストレージに保存されます。外部サーバーへの送信は一切ありません。
 ```
 
 ---
